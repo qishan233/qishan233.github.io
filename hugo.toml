@@ -1,0 +1,20 @@
+baseURL = 'https://nilxuan.github.io/'
+languageCode = 'zh-cn'
+title = "落花流水存心阁"
+theme='github-style'
+lastmod = true
+[frontmatter]
+  lastmod = ["lastmod", ":fileModTime", ":default"]
+
+[params]
+  author = "QiShan"
+  description = "非淡泊无以明志，非宁静无以致远"
+  github = "nilxuan"
+  keywords = "blog, google analytics"
+  rss = true
+  lastmod = true
+  userStatusEmoji = "😀"
+  favicon = "/images/favicon.png"
+  avatar = "/images/avatar.jpg"
+  headerIcon = "/images/header-icon.png"
+  location = "China"

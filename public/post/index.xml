@@ -6,8 +6,15 @@
     <description>Recent content in Posts on 落花流水存心阁</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 14 Apr 2024 20:04:49 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 15 Apr 2024 23:05:22 +0800</lastBuildDate>
     <atom:link href="https://nilxuan.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Fast Sort</title>
+      <link>https://nilxuan.github.io/post/fast-sort/</link>
+      <pubDate>Mon, 15 Apr 2024 23:01:25 +0800</pubDate>
+      <guid>https://nilxuan.github.io/post/fast-sort/</guid>
+      <description>快速排序的思考</description>
+    </item>
     <item>
       <title>You Are Not Late</title>
       <link>https://nilxuan.github.io/post/you-are-not-late/</link>

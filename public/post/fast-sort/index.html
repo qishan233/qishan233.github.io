@@ -3,13 +3,13 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
-    <script type="application/javascript" src='https://nilxuan.github.io/js/theme-mode.js'></script>
-    <link rel="stylesheet" href='https://nilxuan.github.io/css/frameworks.min.css' />
-    <link rel="stylesheet" href='https://nilxuan.github.io/css/github.min.css' />
-    <link rel="stylesheet" href='https://nilxuan.github.io/css/github-style.css' />
-    <link rel="stylesheet" href='https://nilxuan.github.io/css/light.css' />
-    <link rel="stylesheet" href='https://nilxuan.github.io/css/dark.css' />
-    <link rel="stylesheet" href='https://nilxuan.github.io/css/syntax.css' />
+    <script type="application/javascript" src='https://qishan888.github.io/js/theme-mode.js'></script>
+    <link rel="stylesheet" href='https://qishan888.github.io/css/frameworks.min.css' />
+    <link rel="stylesheet" href='https://qishan888.github.io/css/github.min.css' />
+    <link rel="stylesheet" href='https://qishan888.github.io/css/github-style.css' />
+    <link rel="stylesheet" href='https://qishan888.github.io/css/light.css' />
+    <link rel="stylesheet" href='https://qishan888.github.io/css/dark.css' />
+    <link rel="stylesheet" href='https://qishan888.github.io/css/syntax.css' />
     <title>Fast Sort - 落花流水存心阁</title>
     
     <link rel="icon" type="image/x-icon" href='/images/favicon.png'>
@@ -22,27 +22,27 @@
 <meta name="keywords"
   content='blog, google analytics' />
 <meta name="robots" content="noodp" />
-<link rel="canonical" href="https://nilxuan.github.io/post/fast-sort/" />
+<link rel="canonical" href="https://qishan888.github.io/post/fast-sort/" />
 
 
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content="Fast Sort - 落花流水存心阁" />
 <meta name="twitter:description"
   content="快速排序的思考" />
-<meta name="twitter:site" content="https://nilxuan.github.io/" />
+<meta name="twitter:site" content="https://qishan888.github.io/" />
 <meta name="twitter:creator" content="" />
 <meta name="twitter:image"
-  content="https://nilxuan.github.io/">
+  content="https://qishan888.github.io/">
 
 
 <meta property="og:type" content="article" />
 <meta property="og:title" content="Fast Sort - 落花流水存心阁">
 <meta property="og:description"
   content="快速排序的思考" />
-<meta property="og:url" content="https://nilxuan.github.io/post/fast-sort/" />
+<meta property="og:url" content="https://qishan888.github.io/post/fast-sort/" />
 <meta property="og:site_name" content="Fast Sort" />
 <meta property="og:image"
-  content="https://nilxuan.github.io/">
+  content="https://qishan888.github.io/">
 <meta property="og:image:width" content="2048">
 <meta property="og:image:height" content="1024">
 
@@ -64,7 +64,7 @@
   <div style="position: relative">
   <header class="Header js-details-container Details px-3 px-md-4 px-lg-5 flex-wrap flex-md-nowrap open Details--on">
     <div class="Header-item mobile-none" style="margin-top: -4px; margin-bottom: -4px;">
-      <a class="Header-link" href="https://nilxuan.github.io/">
+      <a class="Header-link" href="https://qishan888.github.io/">
         <svg class="octicon" height="32" viewBox="0 0 16 16" version="1.1" width="32">
           <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
           </path>
@@ -92,7 +92,7 @@
               <input type="text"
                 class="Header-search-input form-control input-sm header-search-input jump-to-field js-jump-to-field js-site-search-focus js-site-search-field is-clearable"
                 name="q" value="" placeholder="Search" autocomplete="off">
-              <input type="hidden" name="q" value="site:https://nilxuan.github.io/">
+              <input type="hidden" name="q" value="site:https://qishan888.github.io/">
             </label>
           </form>
         </div>
@@ -100,7 +100,7 @@
     </div>
 
     <div class="Header-item Header-item--full flex-justify-center d-md-none position-relative">
-      <a class="Header-link " href="https://nilxuan.github.io/">
+      <a class="Header-link " href="https://qishan888.github.io/">
         
         <svg class="octicon" height="32" viewBox="0 0 16 16" version="1.1" width="32">
           <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
@@ -130,7 +130,7 @@
           <div class="flex-auto min-width-0 width-fit mr-3">
             <div class="d-flex">
               <div class="d-none d-md-block">
-                <a class="avatar mr-2 flex-shrink-0" href="https://nilxuan.github.io/">
+                <a class="avatar mr-2 flex-shrink-0" href="https://qishan888.github.io/">
                   <img class=" avatar-user"
                     src="/images/avatar.jpg"
                     width="32" height="32"></a>
@@ -138,11 +138,11 @@
               <div class="d-flex flex-column">
                 <h1 class="break-word f3 text-normal mb-md-0 mb-1">
                   <span class="author">
-                    <a href="https://nilxuan.github.io/">QiShan</a>
+                    <a href="https://qishan888.github.io/">QiShan</a>
                   </span>
                   <span class="path-divider">/</span>
                   <strong class="css-truncate css-truncate-target mr-1" style="max-width: 410px">
-                    <a href="https://nilxuan.github.io/post/fast-sort/">Fast Sort</a>
+                    <a href="https://qishan888.github.io/post/fast-sort/">Fast Sort</a>
                   </strong>
                 </h1>
                 <div class="note m-0">
@@ -152,9 +152,9 @@
 
                   
                   <span class="file-info-divider"></span>
-                  Modified <relative-time datetime="Mon, 15 Apr 2024 23:05:22 &#43;0800"
+                  Modified <relative-time datetime="Tue, 16 Apr 2024 21:12:28 &#43;0800"
                     class="no-wrap">
-                    Mon, 15 Apr 2024 23:05:22 &#43;0800</relative-time>
+                    Tue, 16 Apr 2024 21:12:28 &#43;0800</relative-time>
                   
                 </div>
               </div>
@@ -184,7 +184,7 @@
                         </div>
                       </div>
                     </details-menu>
-                      1222 Words
+                      1449 Words
                     
 
                   </div>
@@ -200,9 +200,44 @@
 <p>对于数组 A 以及待排序的范围 [left, rigit]，每经过一次 partition，对于下标 x 处的元素，A[left, x-1] 的元素均小于等于 A[x]，对于 A[x+1, right] 的元素均大于 A[x]；这里 A[x] 也被称为哨兵；实际上，可以选择数组中的任意值作为哨兵；每经过一次排序</p>
 <p>也就是说，每经过一次排序，数组 A 的有序性都增加了；当然，x+1 需要小于 right，x-1 需要大于 left，否则就是数组为空，而数组为空表示递归排序的结束；</p>
 <p>所以，快速排序的代码实现核心是实现 partition 方法；核心思路是元素交换，但是怎么交换是另一个关键问题；按照双指针前进方向可以分为：</p>
-<p>第一种：双指针同向遍历。快指针向前遍历，直到等于 right-1（这是哨兵为 A[right] 的情况，如果哨兵不为 A[rigiht] 那么就需要在 right 位置停下来）；慢指针指向小于等于哨兵的边界；快指针遇到大于哨兵的值则向前移动；遇到小于等于哨兵的值，则慢指针向前移动后（此时指向一个大于哨兵的值）和快指针进行交换；一般而言，会选择 A[right] 作为哨兵值；</p>
+<h2 id="指针同向遍历">指针同向遍历</h2>
+<p>双指针同向遍历。快指针向前遍历，直到等于 right-1（这是哨兵为 A[right] 的情况，如果哨兵不为 A[rigiht] 那么就需要在 right 位置停下来）；慢指针指向小于等于哨兵的边界；快指针遇到大于哨兵的值则向前移动；遇到小于等于哨兵的值，则慢指针向前移动后（此时指向一个大于哨兵的值）和快指针进行交换；一般而言，会选择 A[right] 作为哨兵值；</p>
 <p>这种思路可以认为是快慢指针将整个数组分为了三个部分:小于等于哨兵、大于哨兵以及未检测；当未检测部分为空的时候，可以认为 partition 结束；而 partition 结束时需要返回的下标就是哨兵的位置，也就是第一、二部分的边界值；</p>
-<p>第二种：双指针相向遍历；这种方法实际上更为复杂，但是有助于锻炼思维模式；left 指针指向 A[left]，right 指针指向 A[right]，同样以 A[right] 作为哨兵；那么 left 遇到大于等于哨兵的值就停下来；right 遇到小于哨兵的值就停下来，然后交换 right 和 left 所在位置的元素；此时需要注意的是停止条件以及循环不变性：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">partition</span>(<span style="color:#a6e22e">nums</span> []<span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">start</span>, <span style="color:#a6e22e">end</span> <span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">int</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 退出条件
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">start</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">end</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">end</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">start</span> &gt; <span style="color:#a6e22e">end</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 哨兵就位
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">x</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">end</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 指针就位
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">left</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">start</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">right</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">start</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 双指针开始遍历
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">for</span> ; <span style="color:#a6e22e">right</span> &lt; <span style="color:#a6e22e">end</span>; <span style="color:#a6e22e">right</span><span style="color:#f92672">++</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">right</span>] <span style="color:#f92672">&lt;=</span> <span style="color:#a6e22e">x</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">left</span><span style="color:#f92672">++</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">left</span>], <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">right</span>] = <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">right</span>], <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">left</span>]
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 保持循环不变性
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">left</span><span style="color:#f92672">++</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 哨兵就位
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">left</span>], <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">end</span>] = <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">end</span>], <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">left</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">left</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="指针双向遍历">指针双向遍历</h2>
+<p>这种方法实际上更为复杂，但是有助于锻炼思维模式；left 指针指向 A[left]，right 指针指向 A[right]，同样以 A[right] 作为哨兵；那么 left 遇到大于等于哨兵的值就停下来；right 遇到小于哨兵的值就停下来，然后交换 right 和 left 所在位置的元素；此时需要注意的是停止条件以及循环不变性：</p>
 <p>left 指针的循环不变性：left-1 及之前的元素均小于哨兵；right 及之后的元素均大于等于哨兵；</p>
 <p>停止条件而言，当 left == right 时，先观察循环不变性：</p>
 <ol>
@@ -216,7 +251,50 @@
 <li>所以退出后，right 此时一定就是哨兵的位置，所以需要交换 right 和 哨兵的位置，并且返回 right；</li>
 </ol>
 <p>从上面的分析来看，步骤 3 和 4 表示经过 步骤 1 和 2 后，总是要交换一次 right 和 left，并自增 left 来维持循环不变性；</p>
-<p>所以，在快速排序中第一种双指针遍历实现要明显简单的；其中第一种双指针的核心思路是整理：两个指针同向前进，快指针负责前进，慢指针则维护一个边界；而第二种双指针的核心思路则是交换，将元素放到它们应该去的区域，从而形成局部有序</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">partition2</span>(<span style="color:#a6e22e">nums</span> []<span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">start</span>, <span style="color:#a6e22e">end</span> <span style="color:#66d9ef">int</span>) <span style="color:#66d9ef">int</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 退出条件
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">start</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">end</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">end</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">start</span> &gt; <span style="color:#a6e22e">end</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 哨兵就位
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">x</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">end</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 指针就位
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">left</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">start</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">right</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">start</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">left</span> &lt; <span style="color:#a6e22e">right</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// 左指针一直前进
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#66d9ef">for</span> ; <span style="color:#a6e22e">left</span> &lt; <span style="color:#a6e22e">right</span>; <span style="color:#a6e22e">left</span><span style="color:#f92672">++</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">left</span>] <span style="color:#f92672">&gt;=</span> <span style="color:#a6e22e">x</span> {
+</span></span><span style="display:flex;"><span>				<span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>			}
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// 右指针一直前进
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#66d9ef">for</span> ; <span style="color:#a6e22e">right</span> &gt; <span style="color:#a6e22e">left</span>; <span style="color:#a6e22e">right</span><span style="color:#f92672">--</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">right</span>] &lt; <span style="color:#a6e22e">x</span> {
+</span></span><span style="display:flex;"><span>				<span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>			}
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// 交换
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">left</span>], <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">end</span>] = <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">end</span>], <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">left</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// 保持循环不变性
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#a6e22e">left</span><span style="color:#f92672">++</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">right</span>], <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">end</span>] = <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">end</span>], <span style="color:#a6e22e">nums</span>[<span style="color:#a6e22e">right</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">right</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>综上，第一种双指针遍历实现要明显简单的，代码的圈复杂度也更低</p>
+<p>其中第一种双指针的核心思路是整理：两个指针同向前进，快指针负责前进，慢指针则维护一个边界；而第二种双指针的核心思路则是交换，将元素放到它们应该去的区域，从而形成局部有序</p>
 </article>
               </div>
             </div>
@@ -226,15 +304,15 @@
     </div>
   </main>
 </div>
-<script type="application/javascript" src='https://nilxuan.github.io/js/toc.js'></script>
-<link rel="stylesheet" href='https://nilxuan.github.io/css/toc.css' />
+<script type="application/javascript" src='https://qishan888.github.io/js/toc.js'></script>
+<link rel="stylesheet" href='https://qishan888.github.io/css/toc.css' />
 
 
 
   <div class="footer container-xl width-full p-responsive">
   <div
     class="position-relative d-flex flex-row-reverse flex-lg-row flex-wrap flex-lg-nowrap flex-justify-center flex-lg-justify-between flex-sm-items-center pt-6 pb-2 mt-6 f6 text-gray border-top border-gray-light ">
-    <a aria-label="Homepage" title="GitHub" class="footer-octicon d-none d-lg-block mr-lg-4" href="https://nilxuan.github.io/">
+    <a aria-label="Homepage" title="GitHub" class="footer-octicon d-none d-lg-block mr-lg-4" href="https://qishan888.github.io/">
       <svg height="24" class="octicon octicon-mark-github" viewBox="0 0 16 16" version="1.1" width="24">
         <path fill-rule="evenodd"
           d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
@@ -255,7 +333,7 @@
 </div>
 </body>
 
-<script type="application/javascript" src="https://nilxuan.github.io/js/github-style.js"></script>
+<script type="application/javascript" src="https://qishan888.github.io/js/github-style.js"></script>
 
 
 

@@ -1,4 +1,4 @@
-baseURL = 'https://qishan888.github.io/'
+baseURL = 'https://qishan233.github.io/'
 languageCode = 'zh-cn'
 title = "落花流水存心阁"
 theme='github-style'
@@ -9,7 +9,7 @@ lastmod = true
 [params]
   author = "QiShan"
   description = "非淡泊无以明志，非宁静无以致远"
-  github = "qishan888"
+  github = "qishan233"
   keywords = "blog, google analytics"
   rss = true
   lastmod = true

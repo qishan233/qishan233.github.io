@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
-<head>
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
-    <script type="application/javascript" src='https://qishan888.github.io/js/theme-mode.js'></script>
-    <link rel="stylesheet" href='https://qishan888.github.io/css/frameworks.min.css' />
-    <link rel="stylesheet" href='https://qishan888.github.io/css/github.min.css' />
-    <link rel="stylesheet" href='https://qishan888.github.io/css/github-style.css' />
-    <link rel="stylesheet" href='https://qishan888.github.io/css/light.css' />
-    <link rel="stylesheet" href='https://qishan888.github.io/css/dark.css' />
-    <link rel="stylesheet" href='https://qishan888.github.io/css/syntax.css' />
+    <script type="application/javascript" src='http://localhost:1313/js/theme-mode.js'></script>
+    <link rel="stylesheet" href='http://localhost:1313/css/frameworks.min.css' />
+    <link rel="stylesheet" href='http://localhost:1313/css/github.min.css' />
+    <link rel="stylesheet" href='http://localhost:1313/css/github-style.css' />
+    <link rel="stylesheet" href='http://localhost:1313/css/light.css' />
+    <link rel="stylesheet" href='http://localhost:1313/css/dark.css' />
+    <link rel="stylesheet" href='http://localhost:1313/css/syntax.css' />
     <title>Fast Sort - 落花流水存心阁</title>
     
     <link rel="icon" type="image/x-icon" href='/images/favicon.png'>
@@ -22,27 +22,27 @@
 <meta name="keywords"
   content='blog, google analytics' />
 <meta name="robots" content="noodp" />
-<link rel="canonical" href="https://qishan888.github.io/post/fast-sort/" />
+<link rel="canonical" href="http://localhost:1313/post/fast-sort/" />
 
 
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content="Fast Sort - 落花流水存心阁" />
 <meta name="twitter:description"
   content="快速排序的思考" />
-<meta name="twitter:site" content="https://qishan888.github.io/" />
+<meta name="twitter:site" content="http://localhost:1313/" />
 <meta name="twitter:creator" content="" />
 <meta name="twitter:image"
-  content="https://qishan888.github.io/">
+  content="http://localhost:1313/">
 
 
 <meta property="og:type" content="article" />
 <meta property="og:title" content="Fast Sort - 落花流水存心阁">
 <meta property="og:description"
   content="快速排序的思考" />
-<meta property="og:url" content="https://qishan888.github.io/post/fast-sort/" />
+<meta property="og:url" content="http://localhost:1313/post/fast-sort/" />
 <meta property="og:site_name" content="Fast Sort" />
 <meta property="og:image"
-  content="https://qishan888.github.io/">
+  content="http://localhost:1313/">
 <meta property="og:image:width" content="2048">
 <meta property="og:image:height" content="1024">
 
@@ -64,7 +64,7 @@
   <div style="position: relative">
   <header class="Header js-details-container Details px-3 px-md-4 px-lg-5 flex-wrap flex-md-nowrap open Details--on">
     <div class="Header-item mobile-none" style="margin-top: -4px; margin-bottom: -4px;">
-      <a class="Header-link" href="https://qishan888.github.io/">
+      <a class="Header-link" href="http://localhost:1313/">
         <svg class="octicon" height="32" viewBox="0 0 16 16" version="1.1" width="32">
           <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
           </path>
@@ -92,7 +92,7 @@
               <input type="text"
                 class="Header-search-input form-control input-sm header-search-input jump-to-field js-jump-to-field js-site-search-focus js-site-search-field is-clearable"
                 name="q" value="" placeholder="Search" autocomplete="off">
-              <input type="hidden" name="q" value="site:https://qishan888.github.io/">
+              <input type="hidden" name="q" value="site:http://localhost:1313/">
             </label>
           </form>
         </div>
@@ -100,7 +100,7 @@
     </div>
 
     <div class="Header-item Header-item--full flex-justify-center d-md-none position-relative">
-      <a class="Header-link " href="https://qishan888.github.io/">
+      <a class="Header-link " href="http://localhost:1313/">
         
         <svg class="octicon" height="32" viewBox="0 0 16 16" version="1.1" width="32">
           <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
@@ -130,7 +130,7 @@
           <div class="flex-auto min-width-0 width-fit mr-3">
             <div class="d-flex">
               <div class="d-none d-md-block">
-                <a class="avatar mr-2 flex-shrink-0" href="https://qishan888.github.io/">
+                <a class="avatar mr-2 flex-shrink-0" href="http://localhost:1313/">
                   <img class=" avatar-user"
                     src="/images/avatar.jpg"
                     width="32" height="32"></a>
@@ -138,11 +138,11 @@
               <div class="d-flex flex-column">
                 <h1 class="break-word f3 text-normal mb-md-0 mb-1">
                   <span class="author">
-                    <a href="https://qishan888.github.io/">QiShan</a>
+                    <a href="http://localhost:1313/">QiShan</a>
                   </span>
                   <span class="path-divider">/</span>
                   <strong class="css-truncate css-truncate-target mr-1" style="max-width: 410px">
-                    <a href="https://qishan888.github.io/post/fast-sort/">Fast Sort</a>
+                    <a href="http://localhost:1313/post/fast-sort/">Fast Sort</a>
                   </strong>
                 </h1>
                 <div class="note m-0">
@@ -152,9 +152,9 @@
 
                   
                   <span class="file-info-divider"></span>
-                  Modified <relative-time datetime="Tue, 16 Apr 2024 21:12:28 &#43;0800"
+                  Modified <relative-time datetime="Wed, 01 May 2024 19:18:23 &#43;0800"
                     class="no-wrap">
-                    Tue, 16 Apr 2024 21:12:28 &#43;0800</relative-time>
+                    Wed, 01 May 2024 19:18:23 &#43;0800</relative-time>
                   
                 </div>
               </div>
@@ -184,7 +184,7 @@
                         </div>
                       </div>
                     </details-menu>
-                      1449 Words
+                      1446 Words
                     
 
                   </div>
@@ -197,8 +197,8 @@
 
               <div class="Box-body px-5 pb-5" style="z-index: 1">
                 <article class="markdown-body entry-content container-lg"><p>快速排序算法的核心思路是分治。</p>
-<p>对于数组 A 以及待排序的范围 [left, rigit]，每经过一次 partition，对于下标 x 处的元素，A[left, x-1] 的元素均小于等于 A[x]，对于 A[x+1, right] 的元素均大于 A[x]；这里 A[x] 也被称为哨兵；实际上，可以选择数组中的任意值作为哨兵；每经过一次排序</p>
-<p>也就是说，每经过一次排序，数组 A 的有序性都增加了；当然，x+1 需要小于 right，x-1 需要大于 left，否则就是数组为空，而数组为空表示递归排序的结束；</p>
+<p>对于数组 A 以及待排序的范围 [left, rigit]，每经过一次 partition，对于下标 x 处的元素，A[left, x-1] 的元素均小于等于 A[x]，对于 A[x+1, right] 的元素均大于 A[x]；这里 A[x] 也被称为哨兵；实际上，可以选择数组中的任意值作为哨兵；</p>
+<p>也就是说，每经过一次排序，数组 A 的有序性都增加了；当然，x+1 需要小于等于 right，x-1 需要大于等于 left，否则就是数组为空，而数组为空表示递归排序的结束；</p>
 <p>所以，快速排序的代码实现核心是实现 partition 方法；核心思路是元素交换，但是怎么交换是另一个关键问题；按照双指针前进方向可以分为：</p>
 <h2 id="指针同向遍历">指针同向遍历</h2>
 <p>双指针同向遍历。快指针向前遍历，直到等于 right-1（这是哨兵为 A[right] 的情况，如果哨兵不为 A[rigiht] 那么就需要在 right 位置停下来）；慢指针指向小于等于哨兵的边界；快指针遇到大于哨兵的值则向前移动；遇到小于等于哨兵的值，则慢指针向前移动后（此时指向一个大于哨兵的值）和快指针进行交换；一般而言，会选择 A[right] 作为哨兵值；</p>
@@ -304,15 +304,15 @@
     </div>
   </main>
 </div>
-<script type="application/javascript" src='https://qishan888.github.io/js/toc.js'></script>
-<link rel="stylesheet" href='https://qishan888.github.io/css/toc.css' />
+<script type="application/javascript" src='http://localhost:1313/js/toc.js'></script>
+<link rel="stylesheet" href='http://localhost:1313/css/toc.css' />
 
 
 
   <div class="footer container-xl width-full p-responsive">
   <div
     class="position-relative d-flex flex-row-reverse flex-lg-row flex-wrap flex-lg-nowrap flex-justify-center flex-lg-justify-between flex-sm-items-center pt-6 pb-2 mt-6 f6 text-gray border-top border-gray-light ">
-    <a aria-label="Homepage" title="GitHub" class="footer-octicon d-none d-lg-block mr-lg-4" href="https://qishan888.github.io/">
+    <a aria-label="Homepage" title="GitHub" class="footer-octicon d-none d-lg-block mr-lg-4" href="http://localhost:1313/">
       <svg height="24" class="octicon octicon-mark-github" viewBox="0 0 16 16" version="1.1" width="24">
         <path fill-rule="evenodd"
           d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
@@ -333,7 +333,7 @@
 </div>
 </body>
 
-<script type="application/javascript" src="https://qishan888.github.io/js/github-style.js"></script>
+<script type="application/javascript" src="http://localhost:1313/js/github-style.js"></script>
 
 
 

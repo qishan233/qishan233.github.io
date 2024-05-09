@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <script type="application/javascript" src='http://localhost:1313/js/theme-mode.js'></script>
+    <link rel="stylesheet" href='http://localhost:1313/css/frameworks.min.css' />
+    <link rel="stylesheet" href='http://localhost:1313/css/github.min.css' />
+    <link rel="stylesheet" href='http://localhost:1313/css/github-style.css' />
+    <link rel="stylesheet" href='http://localhost:1313/css/light.css' />
+    <link rel="stylesheet" href='http://localhost:1313/css/dark.css' />
+    <link rel="stylesheet" href='http://localhost:1313/css/syntax.css' />
+    <title>KMP 字符串匹配算法 - 落花流水存心阁</title>
+    
+    <link rel="icon" type="image/x-icon" href='/images/favicon.png'>
+    
+    <meta name="theme-color" content="#1e2327">
+
+    
+    <meta name="description"
+  content="KMP 字符串匹配算法" />
+<meta name="keywords"
+  content='blog, google analytics' />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="http://localhost:1313/post/kmp/" />
+
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="KMP 字符串匹配算法 - 落花流水存心阁" />
+<meta name="twitter:description"
+  content="KMP 字符串匹配算法" />
+<meta name="twitter:site" content="http://localhost:1313/" />
+<meta name="twitter:creator" content="" />
+<meta name="twitter:image"
+  content="http://localhost:1313/">
+
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="KMP 字符串匹配算法 - 落花流水存心阁">
+<meta property="og:description"
+  content="KMP 字符串匹配算法" />
+<meta property="og:url" content="http://localhost:1313/post/kmp/" />
+<meta property="og:site_name" content="KMP 字符串匹配算法" />
+<meta property="og:image"
+  content="http://localhost:1313/">
+<meta property="og:image:width" content="2048">
+<meta property="og:image:height" content="1024">
+
+<meta property="article:published_time" content="2024-05-09 17:01:25 &#43;0800 CST" />
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body>
+  <div style="position: relative">
+  <header class="Header js-details-container Details px-3 px-md-4 px-lg-5 flex-wrap flex-md-nowrap open Details--on">
+    <div class="Header-item mobile-none" style="margin-top: -4px; margin-bottom: -4px;">
+      <a class="Header-link" href="http://localhost:1313/">
+        <svg class="octicon" height="32" viewBox="0 0 16 16" version="1.1" width="32">
+          <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+          </path>
+        </svg>
+      </a>
+    </div>
+    <div class="Header-item d-md-none">
+      <button class="Header-link btn-link js-details-target" type="button"
+        onclick="document.querySelector('#header-search').style.display = document.querySelector('#header-search').style.display == 'none'? 'block': 'none'">
+        <svg height="24" class="octicon octicon-three-bars" viewBox="0 0 16 16" version="1.1" width="24">
+          <path fill-rule="evenodd" d="M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 7.75zM1.75 12a.75.75 0 100 1.5h12.5a.75.75 0 100-1.5H1.75z">
+          </path>
+        </svg>
+      </button>
+    </div>
+    <div style="display: none;" id="header-search"
+      class="Header-item Header-item--full flex-column flex-md-row width-full flex-order-2 flex-md-order-none mr-0 mr-md-3 mt-3 mt-md-0 Details-content--hidden-not-important d-md-flex">
+      <div
+        class="Header-search header-search flex-auto js-site-search position-relative flex-self-stretch flex-md-self-auto mb-3 mb-md-0 mr-0 mr-md-3 scoped-search site-scoped-search js-jump-to">
+        <div class="position-relative">
+          <form target="_blank" action="https://www.google.com/search" accept-charset="UTF-8" method="get"
+            autocomplete="off">
+            <label
+              class="Header-search-label form-control input-sm header-search-wrapper p-0 js-chromeless-input-container header-search-wrapper-jump-to position-relative d-flex flex-justify-between flex-items-center">
+              <input type="text"
+                class="Header-search-input form-control input-sm header-search-input jump-to-field js-jump-to-field js-site-search-focus js-site-search-field is-clearable"
+                name="q" value="" placeholder="Search" autocomplete="off">
+              <input type="hidden" name="q" value="site:http://localhost:1313/">
+            </label>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="Header-item Header-item--full flex-justify-center d-md-none position-relative">
+      <a class="Header-link " href="http://localhost:1313/">
+        
+        <svg class="octicon" height="32" viewBox="0 0 16 16" version="1.1" width="32">
+          <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+          </path>
+        </svg>
+      </a>
+    </div>
+    <div class="Header-item" style="margin-right: 0;">
+      <a href="javascript:void(0)" class="Header-link no-select" onclick="switchTheme()">
+        <svg style="fill: var(--color-profile-color-modes-toggle-moon);" class="no-select" viewBox="0 0 16 16"
+          version="1.1" width="16" height="16">
+          <path fill-rule="evenodd" clip-rule="evenodd"
+            d="M4.52208 7.71754C7.5782 7.71754 10.0557 5.24006 10.0557 2.18394C10.0557 1.93498 10.0392 1.68986 10.0074 1.44961C9.95801 1.07727 10.3495 0.771159 10.6474 0.99992C12.1153 2.12716 13.0615 3.89999 13.0615 5.89383C13.0615 9.29958 10.3006 12.0605 6.89485 12.0605C3.95334 12.0605 1.49286 10.001 0.876728 7.24527C0.794841 6.87902 1.23668 6.65289 1.55321 6.85451C2.41106 7.40095 3.4296 7.71754 4.52208 7.71754Z">
+          </path>
+        </svg>
+      </a>
+    </div>
+  </header>
+</div>
+
+  
+<div>
+  <main>
+    <div class="gisthead pagehead bg-gray-light pb-0 pt-3 mb-4">
+      <div class="px-0">
+        <div class="mb-3 d-flex px-3 px-md-3 px-lg-5">
+          <div class="flex-auto min-width-0 width-fit mr-3">
+            <div class="d-flex">
+              <div class="d-none d-md-block">
+                <a class="avatar mr-2 flex-shrink-0" href="http://localhost:1313/">
+                  <img class=" avatar-user"
+                    src="/images/avatar.jpg"
+                    width="32" height="32"></a>
+              </div>
+              <div class="d-flex flex-column">
+                <h1 class="break-word f3 text-normal mb-md-0 mb-1">
+                  <span class="author">
+                    <a href="http://localhost:1313/">QiShan</a>
+                  </span>
+                  <span class="path-divider">/</span>
+                  <strong class="css-truncate css-truncate-target mr-1" style="max-width: 410px">
+                    <a href="http://localhost:1313/post/kmp/">KMP 字符串匹配算法</a>
+                  </strong>
+                </h1>
+                <div class="note m-0">
+                  Created <relative-time datetime="Thu, 09 May 2024 17:01:25 &#43;0800"
+                    class="no-wrap">
+                    Thu, 09 May 2024 17:01:25 &#43;0800</relative-time>
+
+                  
+                  <span class="file-info-divider"></span>
+                  Modified <relative-time datetime="Thu, 09 May 2024 18:08:37 &#43;0800"
+                    class="no-wrap">
+                    Thu, 09 May 2024 18:08:37 &#43;0800</relative-time>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-lg px-3 new-discussion-timeline">
+      <div class="repository-content gist-content">
+        <div>
+          <div class="js-gist-file-update-container js-task-list-container file-box">
+            <div id="file-pytest" class="file my-2">
+              <div id="post-header" class="file-header d-flex flex-md-items-center flex-items-start sticky-header" style="z-index: 2">
+                <div class="file-info d-flex flex-md-items-center flex-items-start flex-order-1 flex-auto">
+                  <div class="text-mono f6 flex-auto pr-3 flex-order-2 flex-md-order-1 mt-2 mt-md-0">
+                    
+                    <summary id="toc-toggle" onclick="clickToc()" class="btn btn-octicon m-0 mr-2 p-2">
+                      <svg aria-hidden="true" viewBox="0 0 16 16" height="16" width="16" class="octicon octicon-list-unordered">
+                        <path fill-rule="evenodd" d="M2 4a1 1 0 100-2 1 1 0 000 2zm3.75-1.5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zM3 8a1 1 0 11-2 0 1 1 0 012 0zm-1 6a1 1 0 100-2 1 1 0 000 2z"></path>
+                      </svg>
+                    </summary>
+                    <details-menu class="SelectMenu" id="toc-details" style="display: none;">
+                      <div class="SelectMenu-modal rounded-3 mt-1" style="max-height: 340px;">
+                        <div class="SelectMenu-list SelectMenu-list--borderless p-2" style="overscroll-behavior: contain;" id="toc-list">
+                        </div>
+                      </div>
+                    </details-menu>
+                      2726 Words
+                    
+
+                  </div>
+                  <div class="file-actions flex-order-2 pt-0">
+                    
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="Box-body px-5 pb-5" style="z-index: 1">
+                <article class="markdown-body entry-content container-lg"><p>KMP 是由一种高效的字符串匹配算法。字符串匹配问题是指，给定字符串<code>s</code> 和 <code>t</code>，确定 <code>t</code> 在 <code>s</code> 中首次出现的位置，如果 <code>s</code> 中找不到 <code>t</code>，那么返回 -1；</p>
+<h1 id="朴素的字符串匹配算法">朴素的字符串匹配算法</h1>
+<p>在字符串匹配问题中，是想要找到这样一个 <code>s</code> 中的下标  <code>i</code>，使得 <code>s</code> 从  <code>i</code> 开始的子串与 <code>t</code> 相同；一种直观的处理方法是双重循环，逐个检查子串：</p>
+<h2 id="实现">实现</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NormalSearch</span>(<span style="color:#a6e22e">s</span>, <span style="color:#a6e22e">t</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">int</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> <span style="color:#f92672">&lt;=</span> len(<span style="color:#a6e22e">s</span>)<span style="color:#f92672">-</span>len(<span style="color:#a6e22e">t</span>); <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">j</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> ; <span style="color:#a6e22e">j</span> &lt; len(<span style="color:#a6e22e">t</span>); <span style="color:#a6e22e">j</span><span style="color:#f92672">++</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">s</span>[<span style="color:#a6e22e">i</span><span style="color:#f92672">+</span><span style="color:#a6e22e">j</span>] <span style="color:#f92672">!=</span> <span style="color:#a6e22e">t</span>[<span style="color:#a6e22e">j</span>] {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">j</span> <span style="color:#f92672">==</span> len(<span style="color:#a6e22e">t</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">i</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="分析">分析</h2>
+<p>双重循环的思路中，外层循环检查 <code>s</code> 的每一个位置 <code>i</code> ，然后在内层循环中看以 <code>i</code> 开始的子串是否和 <code>t</code> 是匹配的；如果发现子串对应位置上的字符不匹配，那么就结束内层循环，然后在外层循环中自增 <code>i</code>，即相当于将检查点向前移动一步，然后再次进入内循环，内循环又从 0 开始匹配 <code>t</code> 新的子串；</p>
+<h2 id="问题">问题</h2>
+<p>朴素字符串匹配算法的问题在于，每一次进入内层循环的时候，都是从 0 开始尝试匹配，即 <code>j := 0</code>；这部分匹配并没有充分利用匹配过程中获得信息，从而需要做一些无用的匹配；
+考虑匹配过程中出现的这种情况：以 <code>i</code> 开始的子串和 <code>t</code> 部分匹配。记 <code>s</code> 的子串为 s[x, y]，记 <code>t</code> 的这匹配部分为t[0,y-x+1]，也就是说 s[y+1] 与 t[y-x+2]并不匹配：</p>
+<p><img src="/images/20240509154258.png" alt="20240509154258"></p>
+<p>记 <code>t</code> 的长度为 m，按照朴素的字符串匹配算法，接下来将尝试进行 s[x+1, m+x] 和 t[0, m-1]的匹配；
+问题就在于这部分匹配没有利用 <strong>s[x, y] 和 t[0,y-x+1] 是匹配的</strong>这一重要信息。
+s[x+1, m+x ] 和 t[0, m-1] 匹配，可以看作是  s[x+1, y] 和 t[0, y-x-1] 的匹配以及 s[y+1, m+x] 和 t[y-x, m-1]；
+重点关注 s[x+1, y] 和 t[0, y-x-1]的匹配。考虑到 <strong>s[x, y] 和 t[0,y-x+1]是匹配的</strong>，所以s[x+1, y] 和 t[0, y-x-1]的匹配过程相当于：</p>
+<p><img src="/images/20240509162240.png" alt="20240509162240"></p>
+<p>这个匹配实际上是字符串 <code>t</code> 的某一个前缀字符串之间的匹配。由于在匹配过程中，这种部分匹配的情况可能会多次出现，如果能有一种办法可以记录这种匹配信息，从而在后续的匹配中能够利用这些信息来避免不必要的、重复的比较，那么就可以提到匹配效率；
+而 KMP 算法给出了一种解决方案；</p>
+<h1 id="kmp-算法">KMP 算法</h1>
+<p>首先需要引入一个“真后缀”的概念。如果字符串 <code>X = YZ</code>，那么 <code>Z</code> 称为 <code>X</code> 的后缀，当 <code>Y</code> 不为空的时候，<code>Z</code> 称为 <code>X</code> 的真后缀；如果同时满足 <code>X=ZP</code>，即 <code>Z</code> 也是 <code>X</code> 的一个前缀，那么 <code>Z</code> 就称为 <code>X</code> 的特殊真前缀；
+KMP 的核心思想是：</p>
+<ol>
+<li>预处理待查找字符串 <code>T</code>，得到一个数组 <code>M</code>。其中 <code>M\[i\] = k</code>，表示字符串 <code>T[0,i]</code> 的最长的特殊真前缀的长度；</li>
+<li>匹配过程中通过数组<code>M</code>，跳过中间不必要的匹配检查；</li>
+</ol>
+<h2 id="理解">理解</h2>
+<p>以下图为例：</p>
+<p><img src="/images/20240509162240.png" alt="20240509162240"></p>
+<p>由于字符串 <code>s</code> 中的字符 <code>e</code> 和字符串 <code>t</code> 中的字符 <code>g</code> 不匹配，在朴素字符串匹配算法中，接下来的匹配的过程将是字符 <code>b</code> 和 字符 <code>a</code> 进行匹配。
+而 KMP 算法中由于得到了数组 <code>M</code>，所以我们知道字符 <code>f</code> 的下标为 5，而 M[5]，即字符串 <code>abcdef</code> 的特殊真后缀的长度为 0（先目测一下）；这意味着上图所表示的朴素字符串匹配算法在接下来的匹配是没有必要的，因为特殊真后缀实际上就表示了一种匹配：字符串的一个长度为 <code>X</code> 的真后缀与字符串的长度为 <code>X</code> 的前缀是匹配的；
+所以，KMP 算法的核心也有两个：</p>
+<ol>
+<li>最长特殊真后缀长度的计算——数组 <code>M</code> 的计算；</li>
+<li>匹配——数组 <code>M</code> 的使用；</li>
+</ol>
+<h2 id="实现-1">实现</h2>
+<p>这里一共会提供两种 KMP 算法的 go 语言实现。
+首先是根据《算法导论（第三版）》中关于 KMP 算法的伪代码而实现的代码，希望从字符串 <code>t</code> 中检索字符串 <code>p</code> 首次出现的位置：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">KMP</span>(<span style="color:#a6e22e">t</span>, <span style="color:#a6e22e">p</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">int</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">n</span>, <span style="color:#a6e22e">m</span> <span style="color:#f92672">:=</span> len(<span style="color:#a6e22e">t</span>), len(<span style="color:#a6e22e">p</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">k</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">getPrefix</span>(<span style="color:#a6e22e">p</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">q</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> &lt; <span style="color:#a6e22e">n</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">q</span> &gt; <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">p</span>[<span style="color:#a6e22e">q</span>] <span style="color:#f92672">!=</span> <span style="color:#a6e22e">t</span>[<span style="color:#a6e22e">i</span>] {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">q</span> = <span style="color:#a6e22e">k</span>[<span style="color:#a6e22e">q</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">p</span>[<span style="color:#a6e22e">q</span>] <span style="color:#f92672">==</span> <span style="color:#a6e22e">t</span>[<span style="color:#a6e22e">i</span>] {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">q</span><span style="color:#f92672">++</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">q</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">m</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">-</span> <span style="color:#a6e22e">m</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">getPrefix</span>(<span style="color:#a6e22e">s</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">int</span>]<span style="color:#66d9ef">int</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">r</span> <span style="color:#f92672">:=</span> make(<span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">int</span>]<span style="color:#66d9ef">int</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">m</span> <span style="color:#f92672">:=</span> len(<span style="color:#a6e22e">s</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">r</span>[<span style="color:#ae81ff">0</span>] = <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">k</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">q</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">1</span>; <span style="color:#a6e22e">q</span> &lt; <span style="color:#a6e22e">m</span>; <span style="color:#a6e22e">q</span><span style="color:#f92672">++</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">k</span> &gt; <span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">s</span>[<span style="color:#a6e22e">q</span>] <span style="color:#f92672">!=</span> <span style="color:#a6e22e">s</span>[<span style="color:#a6e22e">k</span>] {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">k</span> = <span style="color:#a6e22e">r</span>[<span style="color:#a6e22e">k</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">s</span>[<span style="color:#a6e22e">q</span>] <span style="color:#f92672">==</span> <span style="color:#a6e22e">s</span>[<span style="color:#a6e22e">k</span>] {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">k</span><span style="color:#f92672">++</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">r</span>[<span style="color:#a6e22e">q</span>] = <span style="color:#a6e22e">k</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">r</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>第二种代码实现是自己根据对算法核心思想的理解而实现的，从字符串 <code>s</code> 中寻找字符串 <code>t</code> 首次出现的位置：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">findSubString</span>(<span style="color:#a6e22e">s</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">t</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">int</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">move</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">getMoveInfo</span>(<span style="color:#a6e22e">t</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">k</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> &lt; len(<span style="color:#a6e22e">s</span>); <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> &lt; len(<span style="color:#a6e22e">s</span>) <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">k</span> &lt; len(<span style="color:#a6e22e">t</span>) <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">s</span>[<span style="color:#a6e22e">i</span>] <span style="color:#f92672">==</span> <span style="color:#a6e22e">t</span>[<span style="color:#a6e22e">k</span>] {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">k</span><span style="color:#f92672">++</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">k</span> <span style="color:#f92672">==</span> len(<span style="color:#a6e22e">t</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// 找到了子串
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">-</span> len(<span style="color:#a6e22e">t</span>)
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">==</span> len(<span style="color:#a6e22e">s</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// 找遍了s，也没找到
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 还能继续找
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">k</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">k</span> = <span style="color:#a6e22e">move</span>[<span style="color:#a6e22e">k</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>] <span style="color:#75715e">// k-1 下标对应的子串长度，即是下一次对比的索引
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#a6e22e">i</span><span style="color:#f92672">--</span>           <span style="color:#75715e">// 因为后续还有 i++ 这里先回退，即保证 i 不变
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">getMoveInfo</span>(<span style="color:#a6e22e">s</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">int</span>]<span style="color:#66d9ef">int</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">r</span> <span style="color:#f92672">:=</span> make(<span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">int</span>]<span style="color:#66d9ef">int</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">r</span>[<span style="color:#ae81ff">0</span>] = <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">p</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">1</span>; <span style="color:#a6e22e">i</span> &lt; len(<span style="color:#a6e22e">s</span>); <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#a6e22e">i</span> &lt; len(<span style="color:#a6e22e">s</span>) <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">p</span> &lt; len(<span style="color:#a6e22e">s</span>)) <span style="color:#f92672">&amp;&amp;</span> (<span style="color:#a6e22e">s</span>[<span style="color:#a6e22e">i</span>] <span style="color:#f92672">==</span> <span style="color:#a6e22e">s</span>[<span style="color:#a6e22e">p</span>]) {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">p</span><span style="color:#f92672">++</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">r</span>[<span style="color:#a6e22e">i</span>] = <span style="color:#a6e22e">p</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">==</span> len(<span style="color:#a6e22e">s</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// 计算完毕
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">p</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">r</span>[<span style="color:#a6e22e">i</span>] = <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">p</span> = <span style="color:#a6e22e">r</span>[<span style="color:#a6e22e">p</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">i</span><span style="color:#f92672">--</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">r</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="分析-1">分析</h2>
+<p>这里也分数组计算、匹配这两个步骤进行两种算法实现的对比。</p>
+<h3 id="位移数组计算">位移数组计算</h3>
+<p>《算法导论》中的计算思路是：</p>
+<ol>
+<li>如果出现部分匹配，则用位移数组更新已经匹配的数字 k；</li>
+<li>结束循环有两种情况：
+<ol>
+<li>该位置的字符是匹配，所以已经匹配数需要自增；</li>
+<li>此时没有匹配数了，即 k 等于 0，此时不需要自增匹配数；</li>
+</ol>
+</li>
+<li>不论 2 中是哪一种情况，此时都得到了特殊真后缀的长度——k，因此将其记录；</li>
+</ol>
+<p>自己实现的思路是：</p>
+<ol>
+<li>只要出现字符匹配，那么就执行：
+<ol>
+<li>移动两个指针；</li>
+<li>匹配数自增；</li>
+<li>记录数据；</li>
+</ol>
+</li>
+<li>结束循环有三种情况：
+<ol>
+<li>所有位置均已经处理完了，所以退出计算即可；</li>
+<li>出现了不匹配：
+<ol>
+<li>如果匹配数不为 0，那么就需要更新匹配数，继续外层循环；</li>
+<li>如果匹配数为 0，那么该记录数据；</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<p>这里两种思路是截然不同的：</p>
+<p>《算法导论》中的目的很明确：找到特殊真后缀的长度，然后将其记录下来；</p>
+<p>自己实现的过程，实际上是对比较过程的“翻译”：匹配——那么移动指针，不匹配——那么判断是结束计算还是更新长度后继续匹配；
+毫无疑问，《算法导论》伪代码实现逻辑更为精炼；自己实现的代码中，if 判断的圈层复杂度太高。</p>
+<h3 id="匹配过程">匹配过程</h3>
+<p>《算法导论》中的逻辑是：</p>
+<ol>
+<li>如果出现部分匹配，则用位移数组更新已经匹配的数字 k；</li>
+<li>结束循环有两种可能：
+<ol>
+<li>对应位置是匹配的，此时更新匹配的字符数；如果等于目标字符串长度，那么返回位置即可；</li>
+<li>如果已经没有匹配数了，那么就前移指针 i，开始下一轮匹配；</li>
+</ol>
+</li>
+</ol>
+<p>自己实现的计算逻辑是：</p>
+<ol>
+<li>只要匹配并且没有遍历完字符串，那么就前移指针；</li>
+<li>结束循环时：
+<ol>
+<li>如果遍历完毕了目标字符串，那么就说明找到了；</li>
+<li>如果遍历完了待检查字符串，那么说明一定找不到了；</li>
+<li>此时就只剩出现了不匹配，这个时候就更新匹配数，进行下一轮匹配；</li>
+</ol>
+</li>
+</ol>
+<p>这里两种思路也是截然不同的：</p>
+<p>《算法道路》中的匹配思路是：如果不匹配，那么移动待匹配的字符串；如果匹配，那么更新已匹配数，然后继续检查；</p>
+<p>自己实现的过程，是只要匹配，那么就移动指针；如果不匹配，那么移动待匹配的字符串，继续下次检查；
+可以看到，《算法导论》伪代码实现逻辑更为精炼，自己实现的代码中，if 判断次数有点多；</p>
+<h3 id="总结">总结</h3>
+<p>整体来看，两种实现代码里，风格都是统一的：</p>
+<ol>
+<li>《算法导论》中 KMP 算法的实现重心在于不匹配时的动作。</li>
+<li>自己实现的代码的重心在于匹配时的动作；</li>
+</ol>
+<h2 id="反思">反思</h2>
+<p>从代码的逻辑、整洁度上看，自己实现的代码和《算法导论》中的伪代码都有不少的差距；、
+前者更像是对匹配过程的翻译，后者是对单次匹配动作的翻译；前者逻辑显得比较笨重，后者更加精炼；
+同一种算法思路，会有不同的算法实现，也会有质量和复杂度上的区别，这是因为解决问题的步骤是不同的；
+如何从计算机的角度思考问题而不是人的角度思考问题，是一个值得思考的问题；</p>
+</article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<script type="application/javascript" src='http://localhost:1313/js/toc.js'></script>
+<link rel="stylesheet" href='http://localhost:1313/css/toc.css' />
+
+
+
+  <div class="footer container-xl width-full p-responsive">
+  <div
+    class="position-relative d-flex flex-row-reverse flex-lg-row flex-wrap flex-lg-nowrap flex-justify-center flex-lg-justify-between flex-sm-items-center pt-6 pb-2 mt-6 f6 text-gray border-top border-gray-light ">
+    <a aria-label="Homepage" title="GitHub" class="footer-octicon d-none d-lg-block mr-lg-4" href="http://localhost:1313/">
+      <svg height="24" class="octicon octicon-mark-github" viewBox="0 0 16 16" version="1.1" width="24">
+        <path fill-rule="evenodd"
+          d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+        </path>
+      </svg>
+    </a>
+    <ul class="list-style-none d-flex flex-wrap col-12 flex-justify-center flex-lg-justify-between mb-2 mb-lg-0">
+      
+      <li class="mr-3 mr-lg-0">Theme by <a href='https://github.com/MeiK2333/github-style'>github-style</a></li>
+      
+    </ul>
+  </div>
+  <div class="d-flex flex-justify-center pb-6">
+    <span class="f6 text-gray-light"></span>
+  </div>
+
+
+</div>
+</body>
+
+<script type="application/javascript" src="http://localhost:1313/js/github-style.js"></script>
+
+
+
+
+</html>

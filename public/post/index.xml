@@ -6,7 +6,8 @@
     <description>Recent content in Posts on 落花流水存心阁</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 09 May 2024 18:04:56 +0800</lastBuildDate>
+    <copyright>qishan233</copyright>
+    <lastBuildDate>Tue, 14 May 2024 17:29:46 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/post/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>KMP 字符串匹配算法</title>

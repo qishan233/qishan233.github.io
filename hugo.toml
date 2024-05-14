@@ -3,6 +3,8 @@ languageCode = 'zh-cn'
 title = "落花流水存心阁"
 theme='github-style'
 lastmod = true
+copyright = "qishan233"
+
 [frontmatter]
   lastmod = ["lastmod", ":fileModTime", ":default"]
 
@@ -18,3 +20,4 @@ lastmod = true
   avatar = "/images/avatar.jpg"
   headerIcon = "/images/header-icon.png"
   location = "China"
+  subtitle = "qishan 的个人博客"

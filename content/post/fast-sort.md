@@ -3,6 +3,7 @@ title = 'Fast Sort'
 date = 2024-04-15T23:01:25+08:00
 draft = false
 summary = '快速排序的思考'
+tags =["算法"]
 +++
 快速排序算法的核心思路是分治。
 

@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>认知 on 落花流水存心阁</title>
-    <link>http://localhost:1313/tags/%E8%AE%A4%E7%9F%A5/</link>
+    <link>https://qishan233.github.io/tags/%E8%AE%A4%E7%9F%A5/</link>
     <description>Recent content in 认知 on 落花流水存心阁</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
     <copyright>qishan233</copyright>
     <lastBuildDate>Tue, 14 May 2024 17:29:46 +0800</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/%E8%AE%A4%E7%9F%A5/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://qishan233.github.io/tags/%E8%AE%A4%E7%9F%A5/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>You Are Not Late</title>
-      <link>http://localhost:1313/post/you-are-not-late/</link>
+      <link>https://qishan233.github.io/post/you-are-not-late/</link>
       <pubDate>Sun, 14 Apr 2024 19:08:14 +0800</pubDate>
-      <guid>http://localhost:1313/post/you-are-not-late/</guid>
+      <guid>https://qishan233.github.io/post/you-are-not-late/</guid>
       <description>You&amp;rsquo;re not late, you&amp;rsquo;r not early</description>
     </item>
   </channel>

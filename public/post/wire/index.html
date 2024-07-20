@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <script type="application/javascript" src='https://qishan233.github.io/js/theme-mode.js'></script>
+    <link rel="stylesheet" href='https://qishan233.github.io/css/frameworks.min.css' />
+    <link rel="stylesheet" href='https://qishan233.github.io/css/github.min.css' />
+    <link rel="stylesheet" href='https://qishan233.github.io/css/github-style.css' />
+    <link rel="stylesheet" href='https://qishan233.github.io/css/light.css' />
+    <link rel="stylesheet" href='https://qishan233.github.io/css/dark.css' />
+    <link rel="stylesheet" href='https://qishan233.github.io/css/syntax.css' />
+    <title>Wire 使用&amp;源码解析 - 落花流水存心阁</title>
+    
+    <link rel="icon" type="image/x-icon" href='/images/favicon.png'>
+    
+    <meta name="theme-color" content="#1e2327">
+
+    
+    <meta name="description"
+  content="wire 使用&amp;amp;核心原理" />
+<meta name="keywords"
+  content='blog, google analytics' />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="https://qishan233.github.io/post/wire/" />
+
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Wire 使用&amp;源码解析 - 落花流水存心阁" />
+<meta name="twitter:description"
+  content="wire 使用&amp;amp;核心原理" />
+<meta name="twitter:site" content="https://qishan233.github.io/" />
+<meta name="twitter:creator" content="" />
+<meta name="twitter:image"
+  content="https://qishan233.github.io/">
+
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Wire 使用&amp;源码解析 - 落花流水存心阁">
+<meta property="og:description"
+  content="wire 使用&amp;amp;核心原理" />
+<meta property="og:url" content="https://qishan233.github.io/post/wire/" />
+<meta property="og:site_name" content="Wire 使用&amp;源码解析" />
+<meta property="og:image"
+  content="https://qishan233.github.io/">
+<meta property="og:image:width" content="2048">
+<meta property="og:image:height" content="1024">
+
+<meta property="article:published_time" content="2024-07-20 19:57:37 &#43;0800 CST" />
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body>
+  <div style="position: relative">
+  <header class="Header js-details-container Details px-3 px-md-4 px-lg-5 flex-wrap flex-md-nowrap open Details--on">
+    <div class="Header-item mobile-none" style="margin-top: -4px; margin-bottom: -4px;">
+      <a class="Header-link" href="https://qishan233.github.io/">
+        <svg class="octicon" height="32" viewBox="0 0 16 16" version="1.1" width="32">
+          <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+          </path>
+        </svg>
+      </a>
+    </div>
+    <div class="Header-item d-md-none">
+      <button class="Header-link btn-link js-details-target" type="button"
+        onclick="document.querySelector('#header-search').style.display = document.querySelector('#header-search').style.display == 'none'? 'block': 'none'">
+        <svg height="24" class="octicon octicon-three-bars" viewBox="0 0 16 16" version="1.1" width="24">
+          <path fill-rule="evenodd" d="M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 7.75zM1.75 12a.75.75 0 100 1.5h12.5a.75.75 0 100-1.5H1.75z">
+          </path>
+        </svg>
+      </button>
+    </div>
+    <div style="display: none;" id="header-search"
+      class="Header-item Header-item--full flex-column flex-md-row width-full flex-order-2 flex-md-order-none mr-0 mr-md-3 mt-3 mt-md-0 Details-content--hidden-not-important d-md-flex">
+      <div
+        class="Header-search header-search flex-auto js-site-search position-relative flex-self-stretch flex-md-self-auto mb-3 mb-md-0 mr-0 mr-md-3 scoped-search site-scoped-search js-jump-to">
+        <div class="position-relative">
+          <form target="_blank" action="https://www.google.com/search" accept-charset="UTF-8" method="get"
+            autocomplete="off">
+            <label
+              class="Header-search-label form-control input-sm header-search-wrapper p-0 js-chromeless-input-container header-search-wrapper-jump-to position-relative d-flex flex-justify-between flex-items-center">
+              <input type="text"
+                class="Header-search-input form-control input-sm header-search-input jump-to-field js-jump-to-field js-site-search-focus js-site-search-field is-clearable"
+                name="q" value="" placeholder="Search" autocomplete="off">
+              <input type="hidden" name="q" value="site:https://qishan233.github.io/">
+            </label>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="Header-item Header-item--full flex-justify-center d-md-none position-relative">
+      <a class="Header-link " href="https://qishan233.github.io/">
+        
+        <svg class="octicon" height="32" viewBox="0 0 16 16" version="1.1" width="32">
+          <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+          </path>
+        </svg>
+      </a>
+    </div>
+    <div class="Header-item" style="margin-right: 0;">
+      <a href="javascript:void(0)" class="Header-link no-select" onclick="switchTheme()">
+        <svg style="fill: var(--color-profile-color-modes-toggle-moon);" class="no-select" viewBox="0 0 16 16"
+          version="1.1" width="16" height="16">
+          <path fill-rule="evenodd" clip-rule="evenodd"
+            d="M4.52208 7.71754C7.5782 7.71754 10.0557 5.24006 10.0557 2.18394C10.0557 1.93498 10.0392 1.68986 10.0074 1.44961C9.95801 1.07727 10.3495 0.771159 10.6474 0.99992C12.1153 2.12716 13.0615 3.89999 13.0615 5.89383C13.0615 9.29958 10.3006 12.0605 6.89485 12.0605C3.95334 12.0605 1.49286 10.001 0.876728 7.24527C0.794841 6.87902 1.23668 6.65289 1.55321 6.85451C2.41106 7.40095 3.4296 7.71754 4.52208 7.71754Z">
+          </path>
+        </svg>
+      </a>
+    </div>
+  </header>
+</div>
+
+  
+<div>
+  <main>
+    <div class="gisthead pagehead bg-gray-light pb-0 pt-3 mb-4">
+      <div class="px-0">
+        <div class="mb-3 d-flex px-3 px-md-3 px-lg-5">
+          <div class="flex-auto min-width-0 width-fit mr-3">
+            <div class="d-flex">
+              <div class="d-none d-md-block">
+                <a class="avatar mr-2 flex-shrink-0" href="https://qishan233.github.io/">
+                  <img class=" avatar-user"
+                    src="/images/avatar.jpg"
+                    width="32" height="32"></a>
+              </div>
+              <div class="d-flex flex-column">
+                <h1 class="break-word f3 text-normal mb-md-0 mb-1">
+                  <span class="author">
+                    <a href="https://qishan233.github.io/">QiShan</a>
+                  </span>
+                  <span class="path-divider">/</span>
+                  <strong class="css-truncate css-truncate-target mr-1" style="max-width: 410px">
+                    <a href="https://qishan233.github.io/post/wire/">Wire 使用&amp;源码解析</a>
+                  </strong>
+                </h1>
+                <div class="note m-0">
+                  Created <relative-time datetime="Sat, 20 Jul 2024 19:57:37 &#43;0800"
+                    class="no-wrap">
+                    Sat, 20 Jul 2024 19:57:37 &#43;0800</relative-time>
+
+                  
+                  <span class="file-info-divider"></span>
+                  Modified <relative-time datetime="Sat, 20 Jul 2024 20:09:36 &#43;0800"
+                    class="no-wrap">
+                    Sat, 20 Jul 2024 20:09:36 &#43;0800</relative-time>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-lg px-3 new-discussion-timeline">
+      <div class="repository-content gist-content">
+        <div>
+          <div class="js-gist-file-update-container js-task-list-container file-box">
+            <div id="file-pytest" class="file my-2">
+              <div id="post-header" class="file-header d-flex flex-md-items-center flex-items-start sticky-header" style="z-index: 2">
+                <div class="file-info d-flex flex-md-items-center flex-items-start flex-order-1 flex-auto">
+                  <div class="text-mono f6 flex-auto pr-3 flex-order-2 flex-md-order-1 mt-2 mt-md-0">
+                    
+                    <summary id="toc-toggle" onclick="clickToc()" class="btn btn-octicon m-0 mr-2 p-2">
+                      <svg aria-hidden="true" viewBox="0 0 16 16" height="16" width="16" class="octicon octicon-list-unordered">
+                        <path fill-rule="evenodd" d="M2 4a1 1 0 100-2 1 1 0 000 2zm3.75-1.5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zM3 8a1 1 0 11-2 0 1 1 0 012 0zm-1 6a1 1 0 100-2 1 1 0 000 2z"></path>
+                      </svg>
+                    </summary>
+                    <details-menu class="SelectMenu" id="toc-details" style="display: none;">
+                      <div class="SelectMenu-modal rounded-3 mt-1" style="max-height: 340px;">
+                        <div class="SelectMenu-list SelectMenu-list--borderless p-2" style="overscroll-behavior: contain;" id="toc-list">
+                        </div>
+                      </div>
+                    </details-menu>
+                      10223 Words
+                    
+
+                  </div>
+                  <div class="file-actions flex-order-2 pt-0">
+                    
+                    
+                    <a class="muted-link mr-3" href="/tags/wire">
+                      <svg class="octicon octicon-tag" viewBox="0 0 16 16" version="1.1" width="16" height="16">
+                        <path fill-rule="evenodd"
+                          d="M2.5 7.775V2.75a.25.25 0 01.25-.25h5.025a.25.25 0 01.177.073l6.25 6.25a.25.25 0 010 .354l-5.025 5.025a.25.25 0 01-.354 0l-6.25-6.25a.25.25 0 01-.073-.177zm-1.5 0V2.75C1 1.784 1.784 1 2.75 1h5.025c.464 0 .91.184 1.238.513l6.25 6.25a1.75 1.75 0 010 2.474l-5.026 5.026a1.75 1.75 0 01-2.474 0l-6.25-6.25A1.75 1.75 0 011 7.775zM6 5a1 1 0 100 2 1 1 0 000-2z">
+                        </path>
+                      </svg>
+                      wire
+                    </a>
+                    
+                    <a class="muted-link mr-3" href="/tags/%E6%BA%90%E7%A0%81">
+                      <svg class="octicon octicon-tag" viewBox="0 0 16 16" version="1.1" width="16" height="16">
+                        <path fill-rule="evenodd"
+                          d="M2.5 7.775V2.75a.25.25 0 01.25-.25h5.025a.25.25 0 01.177.073l6.25 6.25a.25.25 0 010 .354l-5.025 5.025a.25.25 0 01-.354 0l-6.25-6.25a.25.25 0 01-.073-.177zm-1.5 0V2.75C1 1.784 1.784 1 2.75 1h5.025c.464 0 .91.184 1.238.513l6.25 6.25a1.75 1.75 0 010 2.474l-5.026 5.026a1.75 1.75 0 01-2.474 0l-6.25-6.25A1.75 1.75 0 011 7.775zM6 5a1 1 0 100 2 1 1 0 000-2z">
+                        </path>
+                      </svg>
+                      源码
+                    </a>
+                    
+                    
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="Box-body px-5 pb-5" style="z-index: 1">
+                <article class="markdown-body entry-content container-lg"><h1 id="本文概要">本文概要</h1>
+<p>本文介绍了 Go 语言依赖注入库 Wire 的使用方法，同时对 Wire 核心功能的源码进行了解析；
+本文试图实现以下目标：</p>
+<ol>
+<li>介绍清楚 Wire 的使用方法；</li>
+<li>讲明白 Wire 的核心原理；</li>
+</ol>
+<h1 id="wire-简介及用法示例">Wire 简介及用法示例</h1>
+<h2 id="wire-简介">Wire 简介</h2>
+<p>Wire 是一个使用依赖注入自动连接组件的代码生成工具；在 Wire 中，组件之间的依赖关系通过函数的参数进行描述，鼓励显式地初始化而非全局变量；</p>
+<p>由于 Wire 在没有运行时状态或反射的情况下运行，因此编写用于 Wire 的代码（即描述依赖关系的“构造函数”），对于手写的初始化也是有用的。</p>
+<p>Wire 的官方介绍<a href="https://go.dev/blog/wire">博客文章</a></p>
+<h2 id="安装">安装</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">go</span> <span style="color:#a6e22e">install</span> <span style="color:#a6e22e">github</span>.<span style="color:#a6e22e">com</span><span style="color:#f92672">/</span><span style="color:#a6e22e">google</span><span style="color:#f92672">/</span><span style="color:#a6e22e">wire</span><span style="color:#f92672">/</span><span style="color:#a6e22e">cmd</span><span style="color:#f92672">/</span><span style="color:#a6e22e">wire</span><span style="color:#960050;background-color:#1e0010">@</span><span style="color:#a6e22e">latest</span>
+</span></span></code></pre></div><p>确保 <code>$GOPATH/bin</code> 被添加到 <code>$PATH</code> 环境变量中；执行 <code>wire -h</code> 可以查看 Wire 的帮助信息</p>
+<h2 id="使用">使用</h2>
+<p>在 Wire 中有两个核心概念：<code>provider</code> 和 <code>injector</code>；
+<code>provider</code> 是指创建实体的函数，类似于构造函数，它的作用是描述实体或者类型之间的依赖关系；
+<code>injector</code> 则负责连接 Wire 与项目代码，它收集应用所需要的 <code>provider</code>，然后通过生成代码的方式完成相关实体的创建和所需依赖的注入，最后向 <code>injector</code> 的调用方返回一个创建完毕的实体；</p>
+<p>使用 Wire 工具，包含 4 个步骤：</p>
+<ol>
+<li>准备 <code>provider</code>：普通的创建函数，如 <code>func NewSky(cloud Cloud, sun Sun) *Sky</code> 即可；该 <code>provider</code> 表示 <code>Sky</code> 类型有两个依赖项：<code>Cloud</code> 和 <code>Sun</code>；至于这两个依赖项怎么来，交于 Wire 处理即可；</li>
+<li>向 Wire 提供 <code>provider</code>：<code>skySet := wire.NewSet(NewSky,NewCloud,NewSun)</code>；这里将 <code>NewSky、NewCloud、NewSun</code> 作为 <code>provider</code> 通过 <code>wire.NewSet</code> 方法放到了 Wire 提供的结构体 <code>ProviderSet</code> 中；<code>NewSet</code> 函数起到了收集 <code>provider</code> 的作用，而 <code>ProviderSet</code> 最终将投入 <code>injector</code> 中；</li>
+<li>编写 <code>injector</code>：一般是单独放在 wire.go 文件中：</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#f92672">package</span> <span style="color:#a6e22e">somewhere</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//go:build wireinject
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// +build wireinject
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">doInject</span>(<span style="color:#a6e22e">config</span> <span style="color:#a6e22e">Config</span>) <span style="color:#f92672">*</span><span style="color:#a6e22e">Sky</span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">wire</span>.<span style="color:#a6e22e">Build</span>(
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">skySet</span>,
+</span></span><span style="display:flex;"><span>	)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>这里 <code>doInject</code> 作为 <code>injector</code>，它的入参也被视为 <code>provider</code>，同时函数体中只能调用 <code>wire.Build()</code> 方法，否则 Wire 工具会报错；至于最后返回什么，其实并不重要，重要的是函数声明中已经表述清楚最后要返回的<code>*Sky</code>；
+值得注意的是开头的两行条件编译指令，它们确保 wire.go 文件仅能够被 Wire 工具所编译加载（项目代码编译时一般不会指定 <code>wireinject</code> 的条件）</p>
+<ol start="4">
+<li>生成代码：执行 <code>wire gen</code> 命令，Wire 将根据 <code>injector</code> 函数，在与 wire.go 的相同目录下生成  wire_gen.go 文件：</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">//go:build !wireinject
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// +build !wireinject
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#f92672">package</span> <span style="color:#a6e22e">somewhere</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">doInject</span>(<span style="color:#a6e22e">config</span> <span style="color:#a6e22e">Config</span>) <span style="color:#f92672">*</span><span style="color:#a6e22e">SomethingYouGet</span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">cloud</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">NewCloud</span>(<span style="color:#a6e22e">config</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">sun</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">NewSun</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">sky</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">NewSky</span>(<span style="color:#a6e22e">cloud</span>, <span style="color:#a6e22e">sun</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">sky</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>最后生成的文件大概长上面这个样子；由于该文件增加的条件编译指令，使得其不会被 Wire 工具所编译加载；即项目代码真正调用的是 Wire 工具生成的函数；</p>
+<p>上述代码示例，仅供使用流程的理解；更多 Wire 功能示例请移步：hello-wire 仓库；</p>
+<h1 id="关键类型与函数">关键类型与函数</h1>
+<h2 id="类型">类型</h2>
+<p><strong>ProviderSet</strong></p>
+<p><code>type ProviderSet struct{}</code> ProvierSet 是一个标记类型，表示一组 <code>provider</code></p>
+<p><strong>Binding</strong>
+<code>type Binding struct{}</code> Binding 将一个 interface 映射到一个具体的类型；达到“接口”和“实现”的绑定；</p>
+<p><strong>ProvidedValue</strong></p>
+<p><code>ProvidedValue</code> 所关联表达式将被复制到生成的 injector 函数中；</p>
+<p><strong>StructProvider</strong></p>
+<p><code>StructProvider</code> 表示一个命名的结构体；</p>
+<p><strong>StructFields</strong></p>
+<p><code>StructFields</code> 表示一系列来自结构体的字段；</p>
+<h2 id="注册方法">注册方法</h2>
+<p><strong>NewSet</strong></p>
+<p><code>func NewSet(...interface{}) ProviderSet</code> NewSet 会创建一个将入参标记为<code>provider</code> 的 <code>ProviderSet</code>；入参的类型可以为：</p>
+<ol>
+<li>函数值
+将该函数的第一个返回值作为一个提供者注入 Wire；同时该函数的入参将来自其他注册到 Wire 的提供者，要求这些入参中不能出现有相同类型的参数；因为 Wire 是根据入参的类型提供具体的实参；
+函数可以返回一个可选的 <code>error</code> 以及一个 <code>cleanup</code> 函数；<code>cleanup</code> 函数类型必须是<code>type func()</code>。该函数将保证在函数入参对应的 <code>cleanup</code> 方法之前调用，即有依赖关系的提供者所对应的 <code>cleanup</code> 方法将以栈的顺序被调用；
+如果任何 <code>provider</code> 返回了错误，那么将调用相关的 <code>cleanup</code> 方法并且返回该错误；</li>
+<li>ProviderSet
+将 ProviderSet 标记的值作为提供者注入 Wire；作用等同于将 <code>ProviderSet</code> 所标记的 <code>provider</code> 直接提供给 <code>NewSet</code> 函数</li>
+<li>Wire 提供的一系列函数调用
+作用是将函数的返回值作为提供者注入，这些函数包括：
+<ol>
+<li>Struct：将返回值作为提供者注入，可以通过字段名指定需要注入的依赖；</li>
+<li>Bind：通过 Bind 方法将接口与具体的实现进行绑定，具体实现；</li>
+<li>InterfaceValue：创建一个类型为具体实现的变量，然后对象依赖图中所有需要接口类型的地方，均被注入该变量。需要注意的是，wire 并不注入该变量本身的依赖；该方法适合将依赖完毕的对象（如第三方库）绑定到具体的接口中；</li>
+<li>FieldsOf：将制定结构体的各个字段作为各自类型的提供者；
+出于兼容性，如果传递 <code>S</code> 类型的结构体到 <code>NewSet</code>，会同时注入 <code>S</code> 和 <code>*S</code>两个类型的提供者；这个特性在未来的版本中会被移除，因此建议使用 <code>wire.Struct</code> 注入结构体类型的提供者；</li>
+</ol>
+</li>
+</ol>
+<p><strong>Bind</strong></p>
+<p><code>func Bind(iface, to interface{}) Binding</code> Bind 方法返回的是一个 <code>Binding</code> 类型的结构体，其作用是将 <code>to</code> 表示的具体类绑定到 <code>iface</code> 上，即对象依赖图中所有对 <code>iface</code> 的依赖都会被注入 <code>to</code>，需要将 <code>to</code> 对应的 <code>provider</code> 注入到 wire 中；其中入参 <code>iface</code> 和 <code>to</code> 必须是指针：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Fooer</span> <span style="color:#66d9ef">interface</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">Foo</span>()
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MyFoo</span> <span style="color:#66d9ef">struct</span>{}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">MyFoo</span>) <span style="color:#a6e22e">Foo</span>() {}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">MySet</span> = <span style="color:#a6e22e">wire</span>.<span style="color:#a6e22e">NewSet</span>(
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">wire</span>.<span style="color:#a6e22e">Struct</span>(new(<span style="color:#a6e22e">MyFoo</span>)),
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">wire</span>.<span style="color:#a6e22e">Bind</span>(new(<span style="color:#a6e22e">Fooer</span>), new(<span style="color:#a6e22e">MyFoo</span>)),
+</span></span><span style="display:flex;"><span>)
+</span></span></code></pre></div><p>从示例代码中可以看到，<code>Bind</code> 的返回值最后是注入通过 <code>NewSet</code> 方法成为 <code>ProviderSet</code> 的一部分；</p>
+<p><strong>Value</strong></p>
+<p><code>func Value(interface{}) ProvidedValue</code> Value 方法返回的是 <code>ProvidedValue</code> 类型的结构体。<code>Value</code> 入参所关联的表达式不应该是 <code>interface</code>，要关联 <code>interface</code>，建议使用 <code>InterfaceValue</code> 方法；</p>
+<p><strong>InterfaceValue</strong></p>
+<p><code>func InterfaceValue(typ interface{}, x interface{}) ProvidedValue</code> InterfaceValue 方法也返回 <code>ProvidedValue</code> 类型的结构体。其中 <code>typ</code> 是一个指向 <code>interface</code> 的指针，<code>x</code> 是具体的实现；</p>
+<p><strong>Struct</strong></p>
+<p><code>func Struct(structType interface{}, fieldNames ...string) StructProvider</code> Struct 方法表示对于给定的 <code>structType</code> 类型结构体，需要 Wire 注入 <code>fieldNames</code> 指定的字段；第一个参数需要是指针；Wire 会同时注入 <code>structType</code> 和 <code>*structType</code>。特别的，<code>fieldNames</code> 可以通过 &ldquo;*&rdquo; 来表示结构体的所有字段；</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">S</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">MyFoo</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Foo</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">MyBar</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Bar</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span> 
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">Set</span> = <span style="color:#a6e22e">wire</span>.<span style="color:#a6e22e">NewSet</span>(<span style="color:#a6e22e">wire</span>.<span style="color:#a6e22e">Struct</span>(new(<span style="color:#a6e22e">S</span>), <span style="color:#e6db74">&#34;MyFoo&#34;</span>)) <span style="color:#75715e">// inject only S.MyFoo
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">Set</span> = <span style="color:#a6e22e">wire</span>.<span style="color:#a6e22e">NewSet</span>(<span style="color:#a6e22e">wire</span>.<span style="color:#a6e22e">Struct</span>(new(<span style="color:#a6e22e">S</span>), <span style="color:#e6db74">&#34;*&#34;</span>)) <span style="color:#75715e">// inject all fields
+</span></span></span></code></pre></div><p><strong>FieldsOf</strong></p>
+<p><code>func FieldsOf(structType interface{}, fieldNames ...string) StructFields</code> FieldsOf 方法返回 <code>StructFields</code> 结构体；该方法表示给定结构体(structType) 的指定字段(fieldNames) 将成为各自类型的提供者；第一个参需要是指向结构体的指针或者指向结构体指针的指针；如果第一个参数是指向指针的指针，那么针对指定的结构体字段，Wire 将额外注入其对应的指针类型；</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">S</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">MyFoo</span> <span style="color:#a6e22e">Foo</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">MyBar</span> <span style="color:#a6e22e">Bar</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewStruct</span>() <span style="color:#a6e22e">S</span> { <span style="color:#75715e">/* ... */</span> }
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">Set</span> = <span style="color:#a6e22e">wire</span>.<span style="color:#a6e22e">NewSet</span>(<span style="color:#a6e22e">wire</span>.<span style="color:#a6e22e">FieldsOf</span>(new(<span style="color:#a6e22e">S</span>), <span style="color:#e6db74">&#34;MyFoo&#34;</span>, <span style="color:#e6db74">&#34;MyBar&#34;</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// or
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewStruct</span>() <span style="color:#f92672">*</span><span style="color:#a6e22e">S</span> { <span style="color:#75715e">/* ... */</span> }
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">Set</span> = <span style="color:#a6e22e">wire</span>.<span style="color:#a6e22e">NewSet</span>(<span style="color:#a6e22e">wire</span>.<span style="color:#a6e22e">FieldsOf</span>(new(<span style="color:#f92672">*</span><span style="color:#a6e22e">S</span>), <span style="color:#e6db74">&#34;MyFoo&#34;</span>, <span style="color:#e6db74">&#34;MyBar&#34;</span>))
+</span></span></code></pre></div><p>上述代码示例所表示的两个场景中，前者对于 <code>Foo</code> 和 <code>Bar</code>, Wire 将分别使用 <code>S.MyFoo</code>、 <code>S.MyBar</code> 作为 <code>Foo</code> 和 <code>Bar</code> 的 <code>provider</code>；后者 Wire 还会分别提供 <code>*Foo</code> 和 <code>*Bar</code>；这里有一个问题，就是 <code>S</code> 是怎么创建的呢？</p>
+<h2 id="入口方法">入口方法</h2>
+<p><code>Build</code> 方法体将在 <code>injector</code> 函数中被调用，Wire 的代码生成工具将在 injector 函数中生成调用 <code>provider</code> 的代码来组装需要实体；<code>Build</code> 函数的入参与 <code>NewSet</code> 一样，将成为其类型的 <code>provider</code>。</p>
+<p><code>Build</code> 方法的第一个返回值是 injector 函数的返回值，第二个可选的返回值是一个 <code>cleanup</code> 方法；最后一个可选的返回值是 <code>error</code>；如果注册到 Wire 的 <code>provider</code> 函数返回了 <code>error</code> 或者 <code>cleanup</code> 方法，那么 injector 函数的签名中也必须存在对应的元素；</p>
+<p>一个 wire.go 文件中可以包含多个 <code>injector</code> 方法；</p>
+<h1 id="核心代码--原理">核心代码 &amp; 原理</h1>
+<p>Wire 工具支持多个子命令，本节只会涉及代码生成部分的核心原理与源码解读，其余代码如果有兴趣可以自行探索；
+正如把大象装入冰箱分为 3 步一样，Wire 的工作流程也分为 3 步：</p>
+<ol>
+<li>收集依赖关系；</li>
+<li>解析依赖关系得到调用次序；</li>
+<li>生成代码；</li>
+</ol>
+<h2 id="入口">入口</h2>
+<p>Wire 作为命令行工具，其内部实现了一套子命令分派流程。简单来说就是根据传递给 Wire 的命令行参数决定执行哪个子逻辑。以下是 cmd\wire\main.go 的 <code>main</code> 方法，也是工具的入口：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">subcommands</span>.<span style="color:#a6e22e">Register</span>(<span style="color:#a6e22e">subcommands</span>.<span style="color:#a6e22e">CommandsCommand</span>(), <span style="color:#e6db74">&#34;&#34;</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">subcommands</span>.<span style="color:#a6e22e">Register</span>(<span style="color:#a6e22e">subcommands</span>.<span style="color:#a6e22e">FlagsCommand</span>(), <span style="color:#e6db74">&#34;&#34;</span>)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">subcommands</span>.<span style="color:#a6e22e">Register</span>(<span style="color:#a6e22e">subcommands</span>.<span style="color:#a6e22e">HelpCommand</span>(), <span style="color:#e6db74">&#34;&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">subcommands</span>.<span style="color:#a6e22e">Register</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">checkCmd</span>{}, <span style="color:#e6db74">&#34;&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">subcommands</span>.<span style="color:#a6e22e">Register</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">diffCmd</span>{}, <span style="color:#e6db74">&#34;&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">subcommands</span>.<span style="color:#a6e22e">Register</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">genCmd</span>{}, <span style="color:#e6db74">&#34;&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">subcommands</span>.<span style="color:#a6e22e">Register</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">showCmd</span>{}, <span style="color:#e6db74">&#34;&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">flag</span>.<span style="color:#a6e22e">Parse</span>()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Initialize the default logger to log to stderr.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">SetFlags</span>(<span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">SetPrefix</span>(<span style="color:#e6db74">&#34;wire: &#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">SetOutput</span>(<span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Stderr</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// TODO(rvangent): Use subcommands&#39;s VisitCommands instead of hardcoded map,
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// once there is a release that contains it:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// allCmds := map[string]bool{}
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// subcommands.DefaultCommander.VisitCommands(func(_ *subcommands.CommandGroup, cmd subcommands.Command) { allCmds[cmd.Name()] = true })
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">allCmds</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">string</span>]<span style="color:#66d9ef">bool</span>{
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;commands&#34;</span>: <span style="color:#66d9ef">true</span>, <span style="color:#75715e">// builtin
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;help&#34;</span>:     <span style="color:#66d9ef">true</span>, <span style="color:#75715e">// builtin
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;flags&#34;</span>:    <span style="color:#66d9ef">true</span>, <span style="color:#75715e">// builtin
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;check&#34;</span>:    <span style="color:#66d9ef">true</span>,
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;diff&#34;</span>:     <span style="color:#66d9ef">true</span>,
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;gen&#34;</span>:      <span style="color:#66d9ef">true</span>,
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#34;show&#34;</span>:     <span style="color:#66d9ef">true</span>,
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Default to running the &#34;gen&#34; command.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">args</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">flag</span>.<span style="color:#a6e22e">Args</span>(); len(<span style="color:#a6e22e">args</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">||</span> !<span style="color:#a6e22e">allCmds</span>[<span style="color:#a6e22e">args</span>[<span style="color:#ae81ff">0</span>]] {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">genCmd</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">genCmd</span>{}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Exit</span>(int(<span style="color:#a6e22e">genCmd</span>.<span style="color:#a6e22e">Execute</span>(<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Background</span>(), <span style="color:#a6e22e">flag</span>.<span style="color:#a6e22e">CommandLine</span>)))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Exit</span>(int(<span style="color:#a6e22e">subcommands</span>.<span style="color:#a6e22e">Execute</span>(<span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Background</span>())))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>可以看到如果执行 wire 命令时没有传递任何参数，默认是执行 <code>gemCmd</code> 的 <code>Execute</code> 方法，当然也可以指定具体命令的名称，如 gen，<code>subcommands.Execute</code> 方法内部会根据命令名称进行分派；所以，我们关注的重点就是 <code>genCmd</code> 的 <code>Execute</code> 方法；</p>
+<p>前文提到，在 Wire 中，我们通过函数来描述依赖关系：入参类型被返回值类型所依赖；我们将这些函数作为 <code>provider</code> 放在了 <code>ProviderSet</code> 等依赖关系收集器中， 然后将这些依赖关系收集器作为参数传递给了 <code>wire.Build()</code> 方法。</p>
+<p>那么 Wire 是如何感知到我们注入的这些依赖关系呢？答案是抽象语法树。</p>
+<h2 id="概览">概览</h2>
+<p><code>genCmd.Execute</code> 方法中，核心逻辑是：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">outs</span>, <span style="color:#a6e22e">errs</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">wire</span>.<span style="color:#a6e22e">Generate</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">wd</span>, <span style="color:#a6e22e">os</span>.<span style="color:#a6e22e">Environ</span>(), <span style="color:#a6e22e">packages</span>(<span style="color:#a6e22e">f</span>), <span style="color:#a6e22e">opts</span>)
+</span></span></code></pre></div><p>其中<code>GenerateResult</code> 类型的 <code>outs</code> 即为所得到的源码，可以通过 <code>out.Commit()</code> 将得到的源码文件；</p>
+<p>这是 <code>wire.Generate</code> 方法的代码：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">Generate</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">wd</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">env</span> []<span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">patterns</span> []<span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">opts</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">GenerateOptions</span>) ([]<span style="color:#a6e22e">GenerateResult</span>, []<span style="color:#66d9ef">error</span>) {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">opts</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">opts</span> = <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">GenerateOptions</span>{}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 关键第 1 步，获取到需要处理的 pkg；
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">pkgs</span>, <span style="color:#a6e22e">errs</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">load</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">wd</span>, <span style="color:#a6e22e">env</span>, <span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">Tags</span>, <span style="color:#a6e22e">patterns</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">errs</span>) &gt; <span style="color:#ae81ff">0</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">errs</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">generated</span> <span style="color:#f92672">:=</span> make([]<span style="color:#a6e22e">GenerateResult</span>, len(<span style="color:#a6e22e">pkgs</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 处理 pkg，每一个 pkg 对应一个 GenerateResult；
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span>, <span style="color:#a6e22e">pkg</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">pkgs</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">generated</span>[<span style="color:#a6e22e">i</span>].<span style="color:#a6e22e">PkgPath</span> = <span style="color:#a6e22e">pkg</span>.<span style="color:#a6e22e">PkgPath</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// 获取输出目录
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#a6e22e">outDir</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">detectOutputDir</span>(<span style="color:#a6e22e">pkg</span>.<span style="color:#a6e22e">GoFiles</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">generated</span>[<span style="color:#a6e22e">i</span>].<span style="color:#a6e22e">Errs</span> = append(<span style="color:#a6e22e">generated</span>[<span style="color:#a6e22e">i</span>].<span style="color:#a6e22e">Errs</span>, <span style="color:#a6e22e">err</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">continue</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// 获取具体的输出文件，这里设置了 wire_gen.go 的后缀
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#a6e22e">generated</span>[<span style="color:#a6e22e">i</span>].<span style="color:#a6e22e">OutputPath</span> = <span style="color:#a6e22e">filepath</span>.<span style="color:#a6e22e">Join</span>(<span style="color:#a6e22e">outDir</span>, <span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">PrefixOutputFile</span><span style="color:#f92672">+</span><span style="color:#e6db74">&#34;wire_gen.go&#34;</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// 每一个 pkg，得到一个 g
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#a6e22e">g</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">newGen</span>(<span style="color:#a6e22e">pkg</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// 关键第 2 步，对于给定的 pkg，生成 ast.File 文件 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#a6e22e">injectorFiles</span>, <span style="color:#a6e22e">errs</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">generateInjectors</span>(<span style="color:#a6e22e">g</span>, <span style="color:#a6e22e">pkg</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">errs</span>) &gt; <span style="color:#ae81ff">0</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">generated</span>[<span style="color:#a6e22e">i</span>].<span style="color:#a6e22e">Errs</span> = <span style="color:#a6e22e">errs</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">continue</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// 复制已有的变量声明到 g
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#a6e22e">copyNonInjectorDecls</span>(<span style="color:#a6e22e">g</span>, <span style="color:#a6e22e">injectorFiles</span>, <span style="color:#a6e22e">pkg</span>.<span style="color:#a6e22e">TypesInfo</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// 关键第 3 步，生成 go 代码
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#a6e22e">goSrc</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">frame</span>(<span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">Tags</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">Header</span>) &gt; <span style="color:#ae81ff">0</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">goSrc</span> = append(<span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">Header</span>, <span style="color:#a6e22e">goSrc</span><span style="color:#f92672">...</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// 格式化一下
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#a6e22e">fmtSrc</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">format</span>.<span style="color:#a6e22e">Source</span>(<span style="color:#a6e22e">goSrc</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// This is likely a bug from a poorly generated source file.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// Add an error but also the unformatted source.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">generated</span>[<span style="color:#a6e22e">i</span>].<span style="color:#a6e22e">Errs</span> = append(<span style="color:#a6e22e">generated</span>[<span style="color:#a6e22e">i</span>].<span style="color:#a6e22e">Errs</span>, <span style="color:#a6e22e">err</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">goSrc</span> = <span style="color:#a6e22e">fmtSrc</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// 保存生成的结果
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#a6e22e">generated</span>[<span style="color:#a6e22e">i</span>].<span style="color:#a6e22e">Content</span> = <span style="color:#a6e22e">goSrc</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">generated</span>, <span style="color:#66d9ef">nil</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><code>wire.Generate</code> 方法中的关键第 1 步是获取到要生成代码的 <code>package</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">pkgs</span>, <span style="color:#a6e22e">errs</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">load</span>(<span style="color:#a6e22e">ctx</span>, <span style="color:#a6e22e">wd</span>, <span style="color:#a6e22e">env</span>, <span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">Tags</span>, <span style="color:#a6e22e">patterns</span>)
+</span></span></code></pre></div><p><code>pkg</code> 的类型是 golang.org/x/tools/go/packages 包下的 <code>Package</code>，该类型表示被加载的 Go 的 package；</p>
+<p>关键第 2 步实际上是生成 <code>ast.File</code> 数组，并且在这个过程中可能对 <code>g</code> 填充了一些内容；<code>ast.File</code> 可以理解为一个 Go 文件；</p>
+<p>最后一个关键步骤就是生成代码了，然后将其保存在 <code>GenerateResult</code> 中，最后由调用者决定是写入文件还是打印到控制台；</p>
+<p>因此，要理解 Wire 的核心工作流程，就需要明白 <code>injectorFiles</code> 的创建过程以及这个过程中对 <code>g</code> 所进行的操作；</p>
+<p><code>injectorFiles</code> 由 <code>generateInjectors</code> 方法创建；该方法的核心是处理前面我们加载的 <code>pkg</code> 中的语法树；</p>
+<h2 id="收集依赖关系">收集依赖关系</h2>
+<p>收集依赖关系包含这几个方面：</p>
+<ol>
+<li>获取 <code>injector</code> 方法，以便收集我们注入的各种 <code>provider</code>；</li>
+<li>解析各种 <code>provider</code>，收集类型之间的依赖关系以及类型绑定关系等；</li>
+</ol>
+<p>处理的逻辑入口是 <code>generateInjectors</code> 方法：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">generateInjectors</span>(<span style="color:#a6e22e">g</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">gen</span>, <span style="color:#a6e22e">pkg</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">packages</span>.<span style="color:#a6e22e">Package</span>) (<span style="color:#a6e22e">injectorFiles</span> []<span style="color:#f92672">*</span><span style="color:#a6e22e">ast</span>.<span style="color:#a6e22e">File</span>, <span style="color:#a6e22e">_</span> []<span style="color:#66d9ef">error</span>) {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">oc</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">newObjectCache</span>([]<span style="color:#f92672">*</span><span style="color:#a6e22e">packages</span>.<span style="color:#a6e22e">Package</span>{<span style="color:#a6e22e">pkg</span>})
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">injectorFiles</span> = make([]<span style="color:#f92672">*</span><span style="color:#a6e22e">ast</span>.<span style="color:#a6e22e">File</span>, <span style="color:#ae81ff">0</span>, len(<span style="color:#a6e22e">pkg</span>.<span style="color:#a6e22e">Syntax</span>))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">ec</span> <span style="color:#f92672">:=</span> new(<span style="color:#a6e22e">errorCollector</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 核心 for 循环
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">f</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">pkg</span>.<span style="color:#a6e22e">Syntax</span> {
+</span></span><span style="display:flex;"><span>	    <span style="color:#f92672">...</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">ec</span>.<span style="color:#a6e22e">errors</span>) &gt; <span style="color:#ae81ff">0</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">ec</span>.<span style="color:#a6e22e">errors</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">injectorFiles</span>, <span style="color:#66d9ef">nil</span>
+</span></span></code></pre></div><p>因此，核心 <code>for</code> 循环中的逻辑可以分为两部分，处理 Declaration 和 Imports：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">f</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">pkg</span>.<span style="color:#a6e22e">Syntax</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">decl</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">f</span>.<span style="color:#a6e22e">Decls</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#f92672">...</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">impt</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">f</span>.<span style="color:#a6e22e">Imports</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#f92672">...</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><code>f.Decls</code> 的类型是 <code>[]ast.Decl</code> ，其中 <code>ast.Decl</code> 表示抽象语法树中的“声明”节点（接口），该节点有三种具体的实现：<code>BadDecl</code>、<code>GenDecl</code> 和 <code>FuncDecl</code>；</p>
+<h3 id="定位-injector-方法">定位 injector 方法</h3>
+<p><code>injector</code> 方法是由 <code>findInjectorBuild</code> 方法完成定位的，其中最为重要的是对 <code>qualifiedIdentObject</code> 函数的调用：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">findInjectorBuild</span>(<span style="color:#a6e22e">info</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">types</span>.<span style="color:#a6e22e">Info</span>, <span style="color:#a6e22e">fn</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">ast</span>.<span style="color:#a6e22e">FuncDecl</span>) (<span style="color:#f92672">*</span><span style="color:#a6e22e">ast</span>.<span style="color:#a6e22e">CallExpr</span>, <span style="color:#66d9ef">error</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">...</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">stmt</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">fn</span>.<span style="color:#a6e22e">Body</span>.<span style="color:#a6e22e">List</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">switch</span> <span style="color:#a6e22e">stmt</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">stmt</span>.(<span style="color:#66d9ef">type</span>) {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">case</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">ast</span>.<span style="color:#a6e22e">ExprStmt</span>:
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">numStatements</span><span style="color:#f92672">++</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">numStatements</span> &gt; <span style="color:#ae81ff">1</span> {
+</span></span><span style="display:flex;"><span>				<span style="color:#a6e22e">invalid</span> = <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>			}
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">call</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">stmt</span>.<span style="color:#a6e22e">X</span>.(<span style="color:#f92672">*</span><span style="color:#a6e22e">ast</span>.<span style="color:#a6e22e">CallExpr</span>)
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">ok</span> {
+</span></span><span style="display:flex;"><span>				<span style="color:#66d9ef">continue</span>
+</span></span><span style="display:flex;"><span>			}
+</span></span><span style="display:flex;"><span>			<span style="color:#75715e">// 关键第 1 步
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>			<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">qualifiedIdentObject</span>(<span style="color:#a6e22e">info</span>, <span style="color:#a6e22e">call</span>.<span style="color:#a6e22e">Fun</span>) <span style="color:#f92672">==</span> <span style="color:#a6e22e">types</span>.<span style="color:#a6e22e">Universe</span>.<span style="color:#a6e22e">Lookup</span>(<span style="color:#e6db74">&#34;panic&#34;</span>) {
+</span></span><span style="display:flex;"><span>				<span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">call</span>.<span style="color:#a6e22e">Args</span>) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">1</span> {
+</span></span><span style="display:flex;"><span>					<span style="color:#66d9ef">continue</span>
+</span></span><span style="display:flex;"><span>				}
+</span></span><span style="display:flex;"><span>				<span style="color:#a6e22e">call</span>, <span style="color:#a6e22e">ok</span> = <span style="color:#a6e22e">call</span>.<span style="color:#a6e22e">Args</span>[<span style="color:#ae81ff">0</span>].(<span style="color:#f92672">*</span><span style="color:#a6e22e">ast</span>.<span style="color:#a6e22e">CallExpr</span>)
+</span></span><span style="display:flex;"><span>				<span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">ok</span> {
+</span></span><span style="display:flex;"><span>					<span style="color:#66d9ef">continue</span>
+</span></span><span style="display:flex;"><span>				}
+</span></span><span style="display:flex;"><span>			}
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">buildObj</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">qualifiedIdentObject</span>(<span style="color:#a6e22e">info</span>, <span style="color:#a6e22e">call</span>.<span style="color:#a6e22e">Fun</span>)
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">buildObj</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">buildObj</span>.<span style="color:#a6e22e">Pkg</span>() <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> <span style="color:#f92672">||</span> !<span style="color:#a6e22e">isWireImport</span>(<span style="color:#a6e22e">buildObj</span>.<span style="color:#a6e22e">Pkg</span>().<span style="color:#a6e22e">Pa</span>
+</span></span><span style="display:flex;"><span>				<span style="color:#66d9ef">continue</span>
+</span></span><span style="display:flex;"><span>			}
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">wireBuildCall</span> = <span style="color:#a6e22e">call</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">case</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">ast</span>.<span style="color:#a6e22e">EmptyStmt</span>:
+</span></span><span style="display:flex;"><span>			<span style="color:#75715e">// Do nothing.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#66d9ef">case</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">ast</span>.<span style="color:#a6e22e">ReturnStmt</span>:
+</span></span><span style="display:flex;"><span>			<span style="color:#75715e">// Allow the function to end in a return.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>			<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">numStatements</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> {
+</span></span><span style="display:flex;"><span>				<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#66d9ef">nil</span>
+</span></span><span style="display:flex;"><span>			}
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">default</span>:
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">invalid</span> = <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#f92672">...</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">qualifiedIdentObject</span>(<span style="color:#a6e22e">info</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">types</span>.<span style="color:#a6e22e">Info</span>, <span style="color:#a6e22e">expr</span> <span style="color:#a6e22e">ast</span>.<span style="color:#a6e22e">Expr</span>) <span style="color:#a6e22e">types</span>.<span style="color:#a6e22e">Object</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">switch</span> <span style="color:#a6e22e">expr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">expr</span>.(<span style="color:#66d9ef">type</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">case</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">ast</span>.<span style="color:#a6e22e">Ident</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">info</span>.<span style="color:#a6e22e">ObjectOf</span>(<span style="color:#a6e22e">expr</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">case</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">ast</span>.<span style="color:#a6e22e">SelectorExpr</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">pkgName</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">expr</span>.<span style="color:#a6e22e">X</span>.(<span style="color:#f92672">*</span><span style="color:#a6e22e">ast</span>.<span style="color:#a6e22e">Ident</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">ok</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">info</span>.<span style="color:#a6e22e">ObjectOf</span>(<span style="color:#a6e22e">pkgName</span>).(<span style="color:#f92672">*</span><span style="color:#a6e22e">types</span>.<span style="color:#a6e22e">PkgName</span>); !<span style="color:#a6e22e">ok</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">info</span>.<span style="color:#a6e22e">ObjectOf</span>(<span style="color:#a6e22e">expr</span>.<span style="color:#a6e22e">Sel</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">default</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><code>findInjectorBuild</code> 里关键点1 处对应于 “panic”模式调用的 <code>wire.Build</code>，在之后的逻辑分支里，实际上修正了 call 变量；</p>
+<p>至此，我们拿到了抽象语法树中表示 <code>wire.Build</code> 方法调用的节点，同时确认了 <code>injector</code> 方法：当且仅当一个方法在函数体内只调用了 <code>wire.Build</code> 函数时，我们称这个方法为 <code>injector</code>；</p>
+<h3 id="解析-injector-方法">解析 injector 方法</h3>
+<p>解析 <code>injector</code> 的目的很明确，就是得到入参以及返回值；关键函数为 <code>injectorFuncSignature</code>：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">injectorFuncSignature</span>(<span style="color:#a6e22e">sig</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">types</span>.<span style="color:#a6e22e">Signature</span>) (<span style="color:#f92672">*</span><span style="color:#a6e22e">types</span>.<span style="color:#a6e22e">Tuple</span>, <span style="color:#a6e22e">outputSignature</span>, <span style="color:#66d9ef">error</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">out</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">funcOutput</span>(<span style="color:#a6e22e">sig</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">outputSignature</span>{}, <span style="color:#a6e22e">err</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">sig</span>.<span style="color:#a6e22e">Params</span>(), <span style="color:#a6e22e">out</span>, <span style="color:#66d9ef">nil</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>可以看到，<code>injectorFuncSignature</code> 方法通过 <code>findOutput</code> 方法获取返回值：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">funcOutput</span>(<span style="color:#a6e22e">sig</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">types</span>.<span style="color:#a6e22e">Signature</span>) (<span style="color:#a6e22e">outputSignature</span>, <span style="color:#66d9ef">error</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">results</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">sig</span>.<span style="color:#a6e22e">Results</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">switch</span> <span style="color:#a6e22e">results</span>.<span style="color:#a6e22e">Len</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> <span style="color:#ae81ff">0</span>:
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">outputSignature</span>{}, <span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">New</span>(<span style="color:#e6db74">&#34;no return values&#34;</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> <span style="color:#ae81ff">1</span>:
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">outputSignature</span>{<span style="color:#a6e22e">out</span>: <span style="color:#a6e22e">results</span>.<span style="color:#a6e22e">At</span>(<span style="color:#ae81ff">0</span>).<span style="color:#a6e22e">Type</span>()}, <span style="color:#66d9ef">nil</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> <span style="color:#ae81ff">2</span>:
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">out</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">results</span>.<span style="color:#a6e22e">At</span>(<span style="color:#ae81ff">0</span>).<span style="color:#a6e22e">Type</span>()
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">switch</span> <span style="color:#a6e22e">t</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">results</span>.<span style="color:#a6e22e">At</span>(<span style="color:#ae81ff">1</span>).<span style="color:#a6e22e">Type</span>(); {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">case</span> <span style="color:#a6e22e">types</span>.<span style="color:#a6e22e">Identical</span>(<span style="color:#a6e22e">t</span>, <span style="color:#a6e22e">errorType</span>):
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">outputSignature</span>{<span style="color:#a6e22e">out</span>: <span style="color:#a6e22e">out</span>, <span style="color:#a6e22e">err</span>: <span style="color:#66d9ef">true</span>}, <span style="color:#66d9ef">nil</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">case</span> <span style="color:#a6e22e">types</span>.<span style="color:#a6e22e">Identical</span>(<span style="color:#a6e22e">t</span>, <span style="color:#a6e22e">cleanupType</span>):
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">outputSignature</span>{<span style="color:#a6e22e">out</span>: <span style="color:#a6e22e">out</span>, <span style="color:#a6e22e">cleanup</span>: <span style="color:#66d9ef">true</span>}, <span style="color:#66d9ef">nil</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">default</span>:
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">outputSignature</span>{}, <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;second return type is %s; must be error 
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">		}
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">	case 3:
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">		if t := results.At(1).Type(); !types.Identical(t, cleanupType) {
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">			return outputSignature{}, fmt.Errorf(&#34;</span><span style="color:#a6e22e">second</span> <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">type</span> <span style="color:#a6e22e">is</span> <span style="color:#f92672">%</span><span style="color:#a6e22e">s</span>; <span style="color:#a6e22e">must</span> <span style="color:#a6e22e">be</span> <span style="color:#66d9ef">func</span>()
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">t</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">results</span>.<span style="color:#a6e22e">At</span>(<span style="color:#ae81ff">2</span>).<span style="color:#a6e22e">Type</span>(); !<span style="color:#a6e22e">types</span>.<span style="color:#a6e22e">Identical</span>(<span style="color:#a6e22e">t</span>, <span style="color:#a6e22e">errorType</span>) {
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">outputSignature</span>{}, <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;third return type is %s; must be error&#34;</span>,
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">outputSignature</span>{
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">out</span>:     <span style="color:#a6e22e">results</span>.<span style="color:#a6e22e">At</span>(<span style="color:#ae81ff">0</span>).<span style="color:#a6e22e">Type</span>(),
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">cleanup</span>: <span style="color:#66d9ef">true</span>,
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">err</span>:     <span style="color:#66d9ef">true</span>,
+</span></span><span style="display:flex;"><span>		}, <span style="color:#66d9ef">nil</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">default</span>:
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">outputSignature</span>{}, <span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">New</span>(<span style="color:#e6db74">&#34;too many return values&#34;</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>从 <code>funcOutput</code> 方法中可以很清晰地认识到 Wire 是如何支持 <code>injector</code> 拥有多个返回值，即对可选的 <code>cleanup</code> 函数以及 <code>error</code> 的支持；</p>
+<p><code>injectorFuncSignature</code> 的返回结果被包装到 InjectorArgs 结构体中：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">injectorArgs</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">InjectorArgs</span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">Name</span>:  <span style="color:#a6e22e">fn</span>.<span style="color:#a6e22e">Name</span>.<span style="color:#a6e22e">Name</span>,
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">Tuple</span>: <span style="color:#a6e22e">ins</span>,
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">Pos</span>:   <span style="color:#a6e22e">fn</span>.<span style="color:#a6e22e">Pos</span>(),
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>至此，我们得到了 <code>injector</code> 的输入、输出以及对 <code>wire.Build</code> 的调用；接下来需要收集各种 <code>provider</code>，这一步是在 <code>objectCache.processNewSet</code> 方法中完成的；</p>
+<h3 id="收集-provider">收集 provider</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">oc</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">objectCache</span>) <span style="color:#a6e22e">processNewSet</span>(<span style="color:#a6e22e">info</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">types</span>.<span style="color:#a6e22e">Info</span>, <span style="color:#a6e22e">pkgPath</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">call</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">ast</span>.<span style="color:#a6e22e">CallExpr</span>, <span style="color:#a6e22e">args</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">InjectorArgs</span>, <span style="color:#a6e22e">varName</span> <span style="color:#66d9ef">string</span>) (<span style="color:#f92672">*</span><span style="color:#a6e22e">ProviderSet</span>, []<span style="color:#66d9ef">error</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// Assumes that call.Fun is wire.NewSet or wire.Build.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">pset</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">ProviderSet</span>{
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">Pos</span>:          <span style="color:#a6e22e">call</span>.<span style="color:#a6e22e">Pos</span>(),
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">InjectorArgs</span>: <span style="color:#a6e22e">args</span>,
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">PkgPath</span>:      <span style="color:#a6e22e">pkgPath</span>,
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">VarName</span>:      <span style="color:#a6e22e">varName</span>,
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">ec</span> <span style="color:#f92672">:=</span> new(<span style="color:#a6e22e">errorCollector</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">arg</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">call</span>.<span style="color:#a6e22e">Args</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// 第一步，将 ast.Expr 转换为 Wire 的内部结构体
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#a6e22e">item</span>, <span style="color:#a6e22e">errs</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">oc</span>.<span style="color:#a6e22e">processExpr</span>(<span style="color:#a6e22e">info</span>, <span style="color:#a6e22e">pkgPath</span>, <span style="color:#a6e22e">arg</span>, <span style="color:#e6db74">&#34;&#34;</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">errs</span>) &gt; <span style="color:#ae81ff">0</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">ec</span>.<span style="color:#a6e22e">add</span>(<span style="color:#a6e22e">errs</span><span style="color:#f92672">...</span>)
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">continue</span>
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// 第二步，将内部结构体放入 ProviderSet 的对应字段
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#66d9ef">switch</span> <span style="color:#a6e22e">item</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">item</span>.(<span style="color:#66d9ef">type</span>) {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">case</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Provider</span>:
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">pset</span>.<span style="color:#a6e22e">Providers</span> = append(<span style="color:#a6e22e">pset</span>.<span style="color:#a6e22e">Providers</span>, <span style="color:#a6e22e">item</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">case</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">ProviderSet</span>:
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">pset</span>.<span style="color:#a6e22e">Imports</span> = append(<span style="color:#a6e22e">pset</span>.<span style="color:#a6e22e">Imports</span>, <span style="color:#a6e22e">item</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">case</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">IfaceBinding</span>:
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">pset</span>.<span style="color:#a6e22e">Bindings</span> = append(<span style="color:#a6e22e">pset</span>.<span style="color:#a6e22e">Bindings</span>, <span style="color:#a6e22e">item</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">case</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Value</span>:
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">pset</span>.<span style="color:#a6e22e">Values</span> = append(<span style="color:#a6e22e">pset</span>.<span style="color:#a6e22e">Values</span>, <span style="color:#a6e22e">item</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">case</span> []<span style="color:#f92672">*</span><span style="color:#a6e22e">Field</span>:
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">pset</span>.<span style="color:#a6e22e">Fields</span> = append(<span style="color:#a6e22e">pset</span>.<span style="color:#a6e22e">Fields</span>, <span style="color:#a6e22e">item</span><span style="color:#f92672">...</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">default</span>:
+</span></span><span style="display:flex;"><span>			panic(<span style="color:#e6db74">&#34;unknown item type&#34;</span>)
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">ec</span>.<span style="color:#a6e22e">errors</span>) &gt; <span style="color:#ae81ff">0</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">ec</span>.<span style="color:#a6e22e">errors</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">errs</span> []<span style="color:#66d9ef">error</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">pset</span>.<span style="color:#a6e22e">providerMap</span>, <span style="color:#a6e22e">pset</span>.<span style="color:#a6e22e">srcMap</span>, <span style="color:#a6e22e">errs</span> = <span style="color:#a6e22e">buildProviderMap</span>(<span style="color:#a6e22e">oc</span>.<span style="color:#a6e22e">fset</span>, <span style="color:#a6e22e">oc</span>.<span style="color:#a6e22e">hasher</span>, <span style="color:#a6e22e">pset</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">errs</span>) &gt; <span style="color:#ae81ff">0</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">errs</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">errs</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">verifyAcyclic</span>(<span style="color:#a6e22e">pset</span>.<span style="color:#a6e22e">providerMap</span>, <span style="color:#a6e22e">oc</span>.<span style="color:#a6e22e">hasher</span>); len(<span style="color:#a6e22e">errs</span>) &gt; <span style="color:#ae81ff">0</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, <span style="color:#a6e22e">errs</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">pset</span>, <span style="color:#66d9ef">nil</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>可以看到，<code>processNewSet</code> 的逻辑是：</p>
+<ol>
+<li>遍历方法调用的参数，即 <code>call.Args</code>；</li>
+<li>构建 ProviderMapp；</li>
+<li>校验是否存在循环依赖；
+其中 2 &amp; 3 步骤属于解析依赖关系，1 属于收集依赖关系；因此本节主要关注步骤 1；而处理的结果被放入 <code>wire.PrviderSet</code> 需要注意的是，这里的 <code>ProviderSet</code> 与 Wire 提供给应用程序注册 <code>provider</code> 的 <code>ProviderSet</code> 仅是名称相同，并不是同一个结构体；它们之间实际上是存在一定的映射关系的；
+首先看步骤 1 的处理整体处理逻辑。</li>
+</ol>
+<p>第一步将 <code>ast.Expr</code> 转换为 Wire 内部的结构体，这是通过 <code>processExpr</code> 方法完成的；</p>
+<p>第二步按照不同的类别，将其放入 <code>ProviderSet</code> 的对应字段；</p>
+<p>接下来，我们重点看看 <code>processExpr</code> 的实现：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">oc</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">objectCache</span>) <span style="color:#a6e22e">processExpr</span>(<span style="color:#a6e22e">info</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">types</span>.<span style="color:#a6e22e">Info</span>, <span style="color:#a6e22e">pkgPath</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">expr</span> <span style="color:#a6e22e">ast</span>.<span style="color:#a6e22e">Expr</span>, <span style="color:#a6e22e">varName</span> <span style="color:#66d9ef">string</span>) (<span style="color:#66d9ef">interface</span>{}, []<span style="color:#66d9ef">error</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">exprPos</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">oc</span>.<span style="color:#a6e22e">fset</span>.<span style="color:#a6e22e">Position</span>(<span style="color:#a6e22e">expr</span>.<span style="color:#a6e22e">Pos</span>())
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">exprPos</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">oc</span>.<span style="color:#a6e22e">fset</span>.<span style="color:#a6e22e">Position</span>(<span style="color:#a6e22e">expr</span>.<span style="color:#a6e22e">Pos</span>())
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">expr</span> = <span style="color:#a6e22e">astutil</span>.<span style="color:#a6e22e">Unparen</span>(<span style="color:#a6e22e">expr</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">obj</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">qualifiedIdentObject</span>(<span style="color:#a6e22e">info</span>, <span style="color:#a6e22e">expr</span>); <span style="color:#a6e22e">obj</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">item</span>, <span style="color:#a6e22e">errs</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">oc</span>.<span style="color:#a6e22e">get</span>(<span style="color:#a6e22e">obj</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">item</span>, <span style="color:#a6e22e">mapErrors</span>(<span style="color:#a6e22e">errs</span>, <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>) <span style="color:#66d9ef">error</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">notePosition</span>(<span style="color:#a6e22e">exprPos</span>, <span style="color:#a6e22e">err</span>)
+</span></span><span style="display:flex;"><span>		})
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">call</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">expr</span>.(<span style="color:#f92672">*</span><span style="color:#a6e22e">ast</span>.<span style="color:#a6e22e">CallExpr</span>); <span style="color:#a6e22e">ok</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">fnObj</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">qualifiedIdentObject</span>(<span style="color:#a6e22e">info</span>, <span style="color:#a6e22e">call</span>.<span style="color:#a6e22e">Fun</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">fnObj</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, []<span style="color:#66d9ef">error</span>{<span style="color:#a6e22e">notePosition</span>(<span style="color:#a6e22e">exprPos</span>, <span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">New</span>(<span style="color:#e6db74">&#34;unknown pattern fnObj nil&#34;</span>))}
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">pkg</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">fnObj</span>.<span style="color:#a6e22e">Pkg</span>()
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">pkg</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">nil</span>, []<span style="color:#66d9ef">error</span>{<span style="color:#a6e22e">notePosition</span>(<span style="color:#a6e22e">exprPos</span>, <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;unknown pattern - pkg in fnObj is 
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">		}
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">		if !isWireImport(pkg.Path()) {
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">			return nil, []error{notePosition(exprPos, errors.New(&#34;</span><span style="color:#a6e22e">unknown</span> <span style="color:#a6e22e">pattern</span><span style="color:#e6db74">&#34;))}
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">		}
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">		switch fnObj.Name() {
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">		case &#34;</span><span style="color:#a6e22e">NewSet</span><span style="color:#e6db74">&#34;:
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">			pset, errs := oc.processNewSet(info, pkgPath, call, nil, varName)
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">			return pset, notePositionAll(exprPos, errs)
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">		case &#34;</span><span style="color:#a6e22e">Bind</span><span style="color:#e6db74">&#34;:
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">			b, err := processBind(oc.fset, info, call)
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">			if err != nil {
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">				return nil, []error{notePosition(exprPos, err)}
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">			}
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">			return b, nil
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">		case &#34;</span><span style="color:#a6e22e">Value</span><span style="color:#e6db74">&#34;:
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">			v, err := processValue(oc.fset, info, call)
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">			if err != nil {
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">				return nil, []error{notePosition(exprPos, err)}
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">			}
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">			return v, nil
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">		case &#34;</span><span style="color:#a6e22e">InterfaceValue</span><span style="color:#e6db74">&#34;:
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">			v, err := processInterfaceValue(oc.fset, info, call)
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">			if err != nil {
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">				return nil, []error{notePosition(exprPos, err)}
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">			}
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">			return v, nil
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">		case &#34;</span><span style="color:#a6e22e">Struct</span><span style="color:#e6db74">&#34;:
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">			s, err := processStructProvider(oc.fset, info, call)
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">			if err != nil {
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">				return nil, []error{notePosition(exprPos, err)}
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">			}
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">			return s, nil
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">		case &#34;</span><span style="color:#a6e22e">FieldsOf</span><span style="color:#e6db74">&#34;:
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">			v, err := processFieldsOf(oc.fset, info, call)
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">			if err != nil {
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">				return nil, []error{notePosition(exprPos, err)}
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">			}
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">			return v, nil
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">		default:
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">			return nil, []error{notePosition(exprPos, errors.New(&#34;</span><span style="color:#a6e22e">unknown</span> <span style="color:#a6e22e">pattern</span><span style="color:#e6db74">&#34;))}
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">		}
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">	}
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">	if tn := structArgType(info, expr); tn != nil {
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">		p, errs := processStructLiteralProvider(oc.fset, tn)
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">		if len(errs) &gt; 0 {
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">			return nil, notePositionAll(exprPos, errs)
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">		}
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">		return p, nil
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">	}
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">	return nil, []error{notePosition(exprPos, errors.New(&#34;</span><span style="color:#a6e22e">unknown</span> <span style="color:#a6e22e">pattern</span><span style="color:#960050;background-color:#1e0010">&#34;</span>))}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p><code>processExpr</code> 的结构也非常清晰：将 <code>expr</code> 分为了三种情况：</p>
+<ol>
+<li>具体的对象，如前文所提到的“关键结构体”；</li>
+<li>wire 相关函数调用，如 <code>Bind</code>、<code>Value</code>、<code>NewSet</code> 等；</li>
+<li>某一具体的结构体，如 xxx.YYY{} 等；
+以上三种情况即为 <code>wire.Build</code> 参数的可能情况；</li>
+</ol>
+<p>通过表达式获取关联的对象，这一步骤仍然是通过 <code>qualifiedIdentObject</code> 方法实现的；</p>
+<p>对于第一种情况，<code>processExpr</code> 直接返回 <code>objectCache.get()</code> 返回的对象即可；</p>
+<p>对于第二种情况，首先通过 <code>qualifiedIdentObject</code> 获取到表示方法调用的 <code>fnObj</code>；然后不同的方法经过不同的处理函数，获取到对应的 Wire 内部结构体；支持的方法有：<code>NewSet</code>、<code>Bind</code>、<code>Value</code>、<code>InterfaceValue</code>、<code>Struct</code>，这些和前文提到的“关键函数”是一致的；</p>
+<p>这里由于篇幅所限，对具体的处理函数不做深入的分析和学习；但是对这些函数的学习有助于加深理解 go 语言所提供的 ast 包的能力；</p>
+<pre><code>从学习 Wire 的实现原理角度来看，这部分内容相对来说不太重要，因为我们需要关注的是 Wire 的处理逻辑，而非处理细节；从学习 go 语言 ast 包能力的角度来看，这部分实际上很重要。因为这部分属于语言能力的具体落地应用，学习价值很高；
+考虑到，本文的主题是对 Wire 实现原理的学习，因此这部分内容留到后面有机会再进行深入的学习；
+</code></pre>
+<p>对于第三种情况，<code>structArgType</code> 方法获取到表达式所对应的类型名称，然后将其返回：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#f92672">...</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">tn</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">qualifiedIdentObject</span>(<span style="color:#a6e22e">info</span>, <span style="color:#a6e22e">lit</span>.<span style="color:#a6e22e">Type</span>).(<span style="color:#f92672">*</span><span style="color:#a6e22e">types</span>.<span style="color:#a6e22e">TypeName</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">...</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">return</span> <span style="color:#a6e22e">tn</span>
+</span></span></code></pre></div><p>至此，依赖关系已经收集完毕，这些关系被存放到 Wire 内部的结构体 <code>ProviderSet</code> 中；接下来要学习的内容是 Wire 如何处理收集到的依赖关系：<code>buildProviderMap</code> 方法的实现；</p>
+<h2 id="解析依赖关系">解析依赖关系</h2>
+<p>首先看 <code>buildProviderMap</code> 的签名：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">buildProviderMap</span>(<span style="color:#a6e22e">fset</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">token</span>.<span style="color:#a6e22e">FileSet</span>, <span style="color:#a6e22e">hasher</span> <span style="color:#a6e22e">typeutil</span>.<span style="color:#a6e22e">Hasher</span>, <span style="color:#a6e22e">set</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">ProviderSet</span>) (<span style="color:#f92672">*</span><span style="color:#a6e22e">typeutil</span>.<span style="color:#a6e22e">Map</span>, <span style="color:#f92672">*</span><span style="color:#a6e22e">typeutil</span>.<span style="color:#a6e22e">Map</span>, []<span style="color:#66d9ef">error</span>)
+</span></span></code></pre></div><p>入参方面，<code>fset</code> 来自我们加载的 <code>package</code> 中的 <code>FSet</code> 字段，该字段主要为包内包含的 Types、TypesInfo 以及 Syntax 提供位置信息；<code>hasher</code> 字段用来保存类型的哈希值，该哈希值用以判断两个类型是否相同；<code>set</code> 则是之前“收集依赖关系”阶段的产物，包含了依赖关系；</p>
+<p>返回值方面，返回 <code>providerMap</code> 以及 <code>srcMap</code>，这两个值被用来覆盖 <code>set</code> 中的同名字段；即可以理解为 <code>buildProviderMap</code> 就是在构建 <code>ProviderSet</code> 的这两个字段：<code>providerMap</code> 将一个提供的类型映射到 <code>*ProvidedType</code>，<code>*ProvidedType</code>用来表示一个<code>provider</code> 具体提供的类型；<code>srcMap</code> 将一个提供的类型映射到 <code>*providerSetSrc</code>，<code>*providerSetSrc</code>用以表示某一类型的来源；</p>
+<p><code>buildProviderMap</code> 方法处理的内容包括：</p>
+<ol>
+<li>set.InjectorArgs：处理 <code>injector</code> 的入参；</li>
+<li>set.Imports：处理 <code>imports</code>，检查是否有绑定冲突；</li>
+<li>set.Providers：处理非绑定的 <code>provider</code>；</li>
+<li>set.Values：处理 <code>wire.Value</code> 方式提供的 <code>provider</code>；</li>
+<li>set.Fields：处理 <code>wire.Fields</code> 表示的 <code>provider</code></li>
+<li>set.Bindings：最后处理 <code>wire.Bind</code> 表示的绑定关系，只能在最后一步进行，因为需要确保具体的 <code>provider</code> 已经被处理收集；
+这里可以看看处理 <code>set.Bindings</code> 的逻辑，可以更好地理解 <code>providerMap</code> 和 <code>srcMap</code> 的差异：</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">b</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">set</span>.<span style="color:#a6e22e">Bindings</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">src</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">providerSetSrc</span>{<span style="color:#a6e22e">Binding</span>: <span style="color:#a6e22e">b</span>}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">prevSrc</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">srcMap</span>.<span style="color:#a6e22e">At</span>(<span style="color:#a6e22e">b</span>.<span style="color:#a6e22e">Iface</span>); <span style="color:#a6e22e">prevSrc</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">ec</span>.<span style="color:#a6e22e">add</span>(<span style="color:#a6e22e">bindingConflictError</span>(<span style="color:#a6e22e">fset</span>, <span style="color:#a6e22e">b</span>.<span style="color:#a6e22e">Iface</span>, <span style="color:#a6e22e">set</span>, <span style="color:#a6e22e">src</span>, <span style="color:#a6e22e">prevSrc</span>.(<span style="color:#f92672">*</span><span style="color:#a6e22e">providerSetSrc</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">continue</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">concrete</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">providerMap</span>.<span style="color:#a6e22e">At</span>(<span style="color:#a6e22e">b</span>.<span style="color:#a6e22e">Provided</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">concrete</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">setName</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">set</span>.<span style="color:#a6e22e">VarName</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">setName</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;&#34;</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">setName</span> = <span style="color:#e6db74">&#34;provider set&#34;</span>
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">ec</span>.<span style="color:#a6e22e">add</span>(<span style="color:#a6e22e">notePosition</span>(<span style="color:#a6e22e">fset</span>.<span style="color:#a6e22e">Position</span>(<span style="color:#a6e22e">b</span>.<span style="color:#a6e22e">Pos</span>), <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#960050;background-color:#1e0010">&#34;</span><span style="color:#a6e22e">wire</span>.<span style="color:#a6e22e">Bind</span> <span style="color:#a6e22e">of</span> <span style="color:#a6e22e">concrete</span> <span style="color:#a6e22e">ty</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">continue</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">providerMap</span>.<span style="color:#a6e22e">Set</span>(<span style="color:#a6e22e">b</span>.<span style="color:#a6e22e">Iface</span>, <span style="color:#a6e22e">concrete</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">srcMap</span>.<span style="color:#a6e22e">Set</span>(<span style="color:#a6e22e">b</span>.<span style="color:#a6e22e">Iface</span>, <span style="color:#a6e22e">src</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>首先从 <code>providerMap</code> 里获取到某一类型的具体 <code>provider</code>，然后将待绑定 <code>type</code> 的 <code>provider</code> 记录为取出的 <code>provider</code>；</p>
+<p>在得到 <code>providerSet</code> 的 <code>providerMap</code>  以及 <code>srcMap</code> 后，需要对收集到的依赖关系进行“循环依赖检测”；这一步是在 <code>verifyAcyclic</code> 方法里完成的；</p>
+<p><code>verifyAcyclic</code> 方法会检查 <code>providerMap</code> 中的每一个 <code>provider</code> 是否存在依赖冲突（循环依赖）的情况；该方法采用深度优先的方式遍历依赖图，同时采用单独的变量标记某个 <code>provider</code> 是否被检查过；<code>verifyAcyclic</code> 采用 “for 循环 + 栈”的方式实现深度优先遍历；</p>
+<p>将某个 <code>provider</code> 的依赖链以数组的形式存储起来，然后再以数组的方式存储各个 <code>provider</code>, 即以二维数组的方式实现深度优先的处理顺序；</p>
+<p>关于 <code>verifyAcyclic</code> 方法，可以从三个方面进行学习：如何入栈？如何出栈？如何判断存在循环依赖？
+首先，入栈的元素从类型上说是一个数组，该数组的结构是依赖链+类型 A；该数组本身是首位元素的依赖链，即 S[0] 依赖 S[1]&hellip;S[len-1]，而类型 A 则表示下一个要处理的 <code>provider</code>；
+出栈则意味着取出类型 A，然后处理该元素的依赖；</p>
+<p>判断循环依赖则比较简单，因为我们已经存储了整条依赖链，只需要检查这条依赖链上是否存在当前处理元素的依赖即可：如果存在则表示有循环依赖，如果没有那么继续处理即可；
+对于上面三个方面，这里贴出对应的代码：</p>
+<p>入栈：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> !<span style="color:#a6e22e">hasCycle</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">next</span> <span style="color:#f92672">:=</span> append(append([]<span style="color:#a6e22e">types</span>.<span style="color:#a6e22e">Type</span>(<span style="color:#66d9ef">nil</span>), <span style="color:#a6e22e">curr</span><span style="color:#f92672">...</span>), <span style="color:#a6e22e">a</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">stk</span> = append(<span style="color:#a6e22e">stk</span>, <span style="color:#a6e22e">next</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>出栈：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">curr</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">stk</span>[len(<span style="color:#a6e22e">stk</span>)<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">stk</span> = <span style="color:#a6e22e">stk</span>[:len(<span style="color:#a6e22e">stk</span>)<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">head</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">curr</span>[len(<span style="color:#a6e22e">curr</span>)<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>]
+</span></span></code></pre></div><p>检查循环依赖：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">a</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">args</span> { <span style="color:#75715e">// args 即为 head 的依赖
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">hasCycle</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">false</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span>, <span style="color:#a6e22e">b</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">curr</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">types</span>.<span style="color:#a6e22e">Identical</span>(<span style="color:#a6e22e">a</span>, <span style="color:#a6e22e">b</span>) {
+</span></span><span style="display:flex;"><span>			<span style="color:#75715e">// 打印错误日志
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		}
+</span></span><span style="display:flex;"><span>	}	
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// 执行入栈
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p>至此，解析依赖关系的步骤就算是完成了！接下来，我们将开始下一段旅程——生成代码；</p>
+<h2 id="生成代码">生成代码</h2>
+<p>生成代码阶段的第一个处理步骤是在 gen 的 <code>inject</code> 方法中完成的：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">g</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">gen</span>) <span style="color:#a6e22e">inject</span>(<span style="color:#a6e22e">pos</span> <span style="color:#a6e22e">token</span>.<span style="color:#a6e22e">Pos</span>, <span style="color:#a6e22e">name</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">sig</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">types</span>.<span style="color:#a6e22e">Signature</span>, <span style="color:#a6e22e">set</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">ProviderSet</span>, <span style="color:#a6e22e">doc</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">ast</span>.<span style="color:#a6e22e">CommentGroup</span>) []<span style="color:#66d9ef">error</span> {}
+</span></span></code></pre></div><p>其中 <code>sig</code> 即为 <code>injector</code> 函数的签名，<code>set</code> 为补充了 <code>providerMap</code> 和 <code>srcMap</code> 的 <code>ProviderSet</code>，<code>doc</code> 是来自 <code>injector</code> 的 <code>CommentGroup</code>；
+首先看 <code>inject</code> 的整体处理逻辑，然后关注重点函数的细节；</p>
+<p><code>inject</code> 函数首先获取到 <code>injector</code> 的函数签名——参数以及返回值，然后获取 <code>injector</code> 函数内部的调用，保存在 <code>calls</code> 中：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">injectSig</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">funcOutput</span>(<span style="color:#a6e22e">sig</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> []<span style="color:#66d9ef">error</span>{<span style="color:#a6e22e">notePosition</span>(<span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">pkg</span>.<span style="color:#a6e22e">Fset</span>.<span style="color:#a6e22e">Position</span>(<span style="color:#a6e22e">pos</span>),
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;inject %s: %v&#34;</span>, <span style="color:#a6e22e">name</span>, <span style="color:#a6e22e">err</span>))}
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">params</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">sig</span>.<span style="color:#a6e22e">Params</span>()
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">calls</span>, <span style="color:#a6e22e">errs</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">solve</span>(<span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">pkg</span>.<span style="color:#a6e22e">Fset</span>, <span style="color:#a6e22e">injectSig</span>.<span style="color:#a6e22e">out</span>, <span style="color:#a6e22e">params</span>, <span style="color:#a6e22e">set</span>)
+</span></span></code></pre></div><p>接下来就是遍历 <code>calls</code>，检查 <code>call</code> 的签名是否和 <code>injector</code> 的签名一致，这里包括是否有 <code>error</code> 以及 <code>cleanup</code> 函数；如果是 <code>value</code> 类型，则加入 <code>pendingVars</code> 数组：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">calls</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">c</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">calls</span>[<span style="color:#a6e22e">i</span>]
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">hasCleanup</span> <span style="color:#f92672">&amp;&amp;</span> !<span style="color:#a6e22e">injectSig</span>.<span style="color:#a6e22e">cleanup</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">ts</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">types</span>.<span style="color:#a6e22e">TypeString</span>(<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">out</span>, <span style="color:#66d9ef">nil</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">ec</span>.<span style="color:#a6e22e">add</span>(<span style="color:#a6e22e">notePosition</span>(
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">pkg</span>.<span style="color:#a6e22e">Fset</span>.<span style="color:#a6e22e">Position</span>(<span style="color:#a6e22e">pos</span>),
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;inject %s: provider for %s returns cleanup but injection does not return cleanup function&#34;</span>, <span style="color:#a6e22e">name</span>, <span style="color:#a6e22e">ts</span>)))
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">hasErr</span> <span style="color:#f92672">&amp;&amp;</span> !<span style="color:#a6e22e">injectSig</span>.<span style="color:#a6e22e">err</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">ts</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">types</span>.<span style="color:#a6e22e">TypeString</span>(<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">out</span>, <span style="color:#66d9ef">nil</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">ec</span>.<span style="color:#a6e22e">add</span>(<span style="color:#a6e22e">notePosition</span>(
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">pkg</span>.<span style="color:#a6e22e">Fset</span>.<span style="color:#a6e22e">Position</span>(<span style="color:#a6e22e">pos</span>),
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;inject %s: provider for %s returns error but injection not allowed to fail&#34;</span>, <span style="color:#a6e22e">name</span>, <span style="color:#a6e22e">ts</span>)))
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">kind</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">valueExpr</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">accessibleFrom</span>(<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">valueTypeInfo</span>, <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">valueExpr</span>, <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">pkg</span>.<span style="color:#a6e22e">PkgPath</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#75715e">// TODO(light): Display line number of value expression.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>			<span style="color:#a6e22e">ts</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">types</span>.<span style="color:#a6e22e">TypeString</span>(<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">out</span>, <span style="color:#66d9ef">nil</span>)
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">ec</span>.<span style="color:#a6e22e">add</span>(<span style="color:#a6e22e">notePosition</span>(
+</span></span><span style="display:flex;"><span>				<span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">pkg</span>.<span style="color:#a6e22e">Fset</span>.<span style="color:#a6e22e">Position</span>(<span style="color:#a6e22e">pos</span>),
+</span></span><span style="display:flex;"><span>				<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Errorf</span>(<span style="color:#e6db74">&#34;inject %s: value %s can&#39;t be used: %v&#34;</span>, <span style="color:#a6e22e">name</span>, <span style="color:#a6e22e">ts</span>, <span style="color:#a6e22e">err</span>)))
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">values</span>[<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">valueExpr</span>] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;&#34;</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">t</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">valueTypeInfo</span>.<span style="color:#a6e22e">TypeOf</span>(<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">valueExpr</span>)
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">name</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">typeVariableName</span>(<span style="color:#a6e22e">t</span>, <span style="color:#e6db74">&#34;&#34;</span>, <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">name</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">string</span> { <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;_wire&#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">export</span>(<span style="color:#a6e22e">name</span>) <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;Value&#34;</span> }, <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">nameInFileScope</span>)
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">values</span>[<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">valueExpr</span>] = <span style="color:#a6e22e">name</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">pendingVars</span> = append(<span style="color:#a6e22e">pendingVars</span>, <span style="color:#a6e22e">pendingVar</span>{
+</span></span><span style="display:flex;"><span>				<span style="color:#a6e22e">name</span>:     <span style="color:#a6e22e">name</span>,
+</span></span><span style="display:flex;"><span>				<span style="color:#a6e22e">expr</span>:     <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">valueExpr</span>,
+</span></span><span style="display:flex;"><span>				<span style="color:#a6e22e">typeInfo</span>: <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">valueTypeInfo</span>,
+</span></span><span style="display:flex;"><span>			})
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">ec</span>.<span style="color:#a6e22e">errors</span>) &gt; <span style="color:#ae81ff">0</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">ec</span>.<span style="color:#a6e22e">errors</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>最后便是生成代码的内容啦：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// Perform one pass to collect all imports, followed by the real pass.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">injectPass</span>(<span style="color:#a6e22e">name</span>, <span style="color:#a6e22e">sig</span>, <span style="color:#a6e22e">calls</span>, <span style="color:#a6e22e">set</span>, <span style="color:#a6e22e">doc</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">injectorGen</span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">g</span>:       <span style="color:#a6e22e">g</span>,
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">errVar</span>:  <span style="color:#a6e22e">disambiguate</span>(<span style="color:#e6db74">&#34;err&#34;</span>, <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">nameInFileScope</span>),
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">discard</span>: <span style="color:#66d9ef">true</span>,
+</span></span><span style="display:flex;"><span>})
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">injectPass</span>(<span style="color:#a6e22e">name</span>, <span style="color:#a6e22e">sig</span>, <span style="color:#a6e22e">calls</span>, <span style="color:#a6e22e">set</span>, <span style="color:#a6e22e">doc</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">injectorGen</span>{
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">g</span>:       <span style="color:#a6e22e">g</span>,
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">errVar</span>:  <span style="color:#a6e22e">disambiguate</span>(<span style="color:#e6db74">&#34;err&#34;</span>, <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">nameInFileScope</span>),
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">discard</span>: <span style="color:#66d9ef">false</span>,
+</span></span><span style="display:flex;"><span>})
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">pendingVars</span>) &gt; <span style="color:#ae81ff">0</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">p</span>(<span style="color:#e6db74">&#34;var (\n&#34;</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">pv</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">pendingVars</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">p</span>(<span style="color:#e6db74">&#34;\t%s = &#34;</span>, <span style="color:#a6e22e">pv</span>.<span style="color:#a6e22e">name</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">writeAST</span>(<span style="color:#a6e22e">pv</span>.<span style="color:#a6e22e">typeInfo</span>, <span style="color:#a6e22e">pv</span>.<span style="color:#a6e22e">expr</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">p</span>(<span style="color:#e6db74">&#34;\n&#34;</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">p</span>(<span style="color:#e6db74">&#34;)\n\n&#34;</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>这里调用了两遍 <code>injectPass</code>，其中第一遍的 <code>discard</code> 参数为 true，第二遍的 <code>discard</code> 参数为 false；</p>
+<p>这里根据注释，第一遍调用的目的是收集 <code>imports</code> 信息，第二遍才是真正地生成代码内容，这是通过 <code>discard</code> 控制的，如果该值为 <code>true</code>，那么任何写的动作都不会被执行；</p>
+<p>具体来说就是 <code>g</code> 的 <code>qualifyPkg</code> 方法，如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">outTypeString</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">types</span>.<span style="color:#a6e22e">TypeString</span>(<span style="color:#a6e22e">injectSig</span>.<span style="color:#a6e22e">out</span>, <span style="color:#a6e22e">ig</span>.<span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">qualifyPkg</span>)
+</span></span></code></pre></div><p><code>qualifyPkg</code> 方法：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">g</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">gen</span>) <span style="color:#a6e22e">qualifyImport</span>(<span style="color:#a6e22e">name</span>, <span style="color:#a6e22e">path</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">string</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">path</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">pkg</span>.<span style="color:#a6e22e">PkgPath</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// TODO(light): This is depending on details of the current loader.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">vendorPart</span> = <span style="color:#e6db74">&#34;vendor/&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">unvendored</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">path</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">strings</span>.<span style="color:#a6e22e">LastIndex</span>(<span style="color:#a6e22e">path</span>, <span style="color:#a6e22e">vendorPart</span>); <span style="color:#a6e22e">i</span> <span style="color:#f92672">!=</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> <span style="color:#f92672">&amp;&amp;</span> (<span style="color:#a6e22e">i</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">path</span>[<span style="color:#a6e22e">i</span><span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>] <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;/&#39;</span>) {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">unvendored</span> = <span style="color:#a6e22e">path</span>[<span style="color:#a6e22e">i</span><span style="color:#f92672">+</span>len(<span style="color:#a6e22e">vendorPart</span>):]
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">info</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">imports</span>[<span style="color:#a6e22e">unvendored</span>]; <span style="color:#a6e22e">ok</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">info</span>.<span style="color:#a6e22e">name</span>
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// TODO(light): Use parts of import path to disambiguate.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">newName</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">disambiguate</span>(<span style="color:#a6e22e">name</span>, <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">n</span> <span style="color:#66d9ef">string</span>) <span style="color:#66d9ef">bool</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// Don&#39;t let an import take the &#34;err&#34; name. That&#39;s annoying.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">n</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;err&#34;</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">nameInFileScope</span>(<span style="color:#a6e22e">n</span>)
+</span></span><span style="display:flex;"><span>	})
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">imports</span>[<span style="color:#a6e22e">unvendored</span>] = <span style="color:#a6e22e">importInfo</span>{
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">name</span>:    <span style="color:#a6e22e">newName</span>,
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">differs</span>: <span style="color:#a6e22e">newName</span> <span style="color:#f92672">!=</span> <span style="color:#a6e22e">name</span>,
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">newName</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>可以看到该方法内部是写入了 <code>g.imports</code> 字段；后续调用因为信息已经存在，会直接返回；</p>
+<p>那么问题来了，为什么要调用两遍？只调用一遍可以吗？</p>
+<p>个人感觉第一遍能收集的信息，即 <code>g.imports</code> 字段，第二遍生成代码的时候也可以收集；这里还没有找到很好的理解；</p>
+<p>回到源码，<code>injectPass</code> 负责向 <code>g</code> 中写入生成的代码， 我们看看 <code>injectPass</code> 方法内部的实现逻辑；</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">injectPass</span>(<span style="color:#a6e22e">name</span> <span style="color:#66d9ef">string</span>, <span style="color:#a6e22e">sig</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">types</span>.<span style="color:#a6e22e">Signature</span>, <span style="color:#a6e22e">calls</span> []<span style="color:#a6e22e">call</span>, <span style="color:#a6e22e">set</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">ProviderSet</span>, <span style="color:#a6e22e">doc</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">ast</span>.<span style="color:#a6e22e">CommentGroup</span>,<span style="color:#a6e22e">ig</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">injectorGen</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">params</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">sig</span>.<span style="color:#a6e22e">Params</span>()
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">injectSig</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">funcOutput</span>(<span style="color:#a6e22e">sig</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// This should be checked by the caller already.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>		panic(<span style="color:#a6e22e">err</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">doc</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">c</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">doc</span>.<span style="color:#a6e22e">List</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">ig</span>.<span style="color:#a6e22e">p</span>(<span style="color:#e6db74">&#34;%s\n&#34;</span>, <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Text</span>)
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">ig</span>.<span style="color:#a6e22e">p</span>(<span style="color:#e6db74">&#34;func %s(&#34;</span>, <span style="color:#a6e22e">name</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span> &lt; <span style="color:#a6e22e">params</span>.<span style="color:#a6e22e">Len</span>(); <span style="color:#a6e22e">i</span><span style="color:#f92672">++</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">i</span> &gt; <span style="color:#ae81ff">0</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">ig</span>.<span style="color:#a6e22e">p</span>(<span style="color:#e6db74">&#34;, &#34;</span>)
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">pi</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">params</span>.<span style="color:#a6e22e">At</span>(<span style="color:#a6e22e">i</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">a</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">pi</span>.<span style="color:#a6e22e">Name</span>()
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">a</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;&#34;</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">a</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;_&#34;</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">a</span> = <span style="color:#a6e22e">typeVariableName</span>(<span style="color:#a6e22e">pi</span>.<span style="color:#a6e22e">Type</span>(), <span style="color:#e6db74">&#34;arg&#34;</span>, <span style="color:#a6e22e">unexport</span>, <span style="color:#a6e22e">ig</span>.<span style="color:#a6e22e">nameInInjector</span>)
+</span></span><span style="display:flex;"><span>		} <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">a</span> = <span style="color:#a6e22e">disambiguate</span>(<span style="color:#a6e22e">a</span>, <span style="color:#a6e22e">ig</span>.<span style="color:#a6e22e">nameInInjector</span>)
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">ig</span>.<span style="color:#a6e22e">paramNames</span> = append(<span style="color:#a6e22e">ig</span>.<span style="color:#a6e22e">paramNames</span>, <span style="color:#a6e22e">a</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">sig</span>.<span style="color:#a6e22e">Variadic</span>() <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">params</span>.<span style="color:#a6e22e">Len</span>()<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#75715e">// Keep the varargs signature instead of a slice for the last argument if the
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>			<span style="color:#75715e">// injector is variadic.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>			<span style="color:#a6e22e">ig</span>.<span style="color:#a6e22e">p</span>(<span style="color:#e6db74">&#34;%s ...%s&#34;</span>, <span style="color:#a6e22e">ig</span>.<span style="color:#a6e22e">paramNames</span>[<span style="color:#a6e22e">i</span>], <span style="color:#a6e22e">types</span>.<span style="color:#a6e22e">TypeString</span>(<span style="color:#a6e22e">pi</span>.<span style="color:#a6e22e">Type</span>().(<span style="color:#f92672">*</span><span style="color:#a6e22e">types</span>.<span style="color:#a6e22e">Slice</span>).<span style="color:#a6e22e">Elem</span>(), <span style="color:#a6e22e">ig</span>.<span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">qualifyPkg</span>))
+</span></span><span style="display:flex;"><span>		} <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">ig</span>.<span style="color:#a6e22e">p</span>(<span style="color:#e6db74">&#34;%s %s&#34;</span>, <span style="color:#a6e22e">ig</span>.<span style="color:#a6e22e">paramNames</span>[<span style="color:#a6e22e">i</span>], <span style="color:#a6e22e">types</span>.<span style="color:#a6e22e">TypeString</span>(<span style="color:#a6e22e">pi</span>.<span style="color:#a6e22e">Type</span>(), <span style="color:#a6e22e">ig</span>.<span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">qualifyPkg</span>))
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">outTypeString</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">types</span>.<span style="color:#a6e22e">TypeString</span>(<span style="color:#a6e22e">injectSig</span>.<span style="color:#a6e22e">out</span>, <span style="color:#a6e22e">ig</span>.<span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">qualifyPkg</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">switch</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> <span style="color:#a6e22e">injectSig</span>.<span style="color:#a6e22e">cleanup</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">injectSig</span>.<span style="color:#a6e22e">err</span>:
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">ig</span>.<span style="color:#a6e22e">p</span>(<span style="color:#e6db74">&#34;) (%s, func(), error) {\n&#34;</span>, <span style="color:#a6e22e">outTypeString</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> <span style="color:#a6e22e">injectSig</span>.<span style="color:#a6e22e">cleanup</span>:
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">ig</span>.<span style="color:#a6e22e">p</span>(<span style="color:#e6db74">&#34;) (%s, func()) {\n&#34;</span>, <span style="color:#a6e22e">outTypeString</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">case</span> <span style="color:#a6e22e">injectSig</span>.<span style="color:#a6e22e">err</span>:
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">ig</span>.<span style="color:#a6e22e">p</span>(<span style="color:#e6db74">&#34;) (%s, error) {\n&#34;</span>, <span style="color:#a6e22e">outTypeString</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">default</span>:
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">ig</span>.<span style="color:#a6e22e">p</span>(<span style="color:#e6db74">&#34;) %s {\n&#34;</span>, <span style="color:#a6e22e">outTypeString</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">calls</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">c</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">calls</span>[<span style="color:#a6e22e">i</span>]
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">lname</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">typeVariableName</span>(<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">out</span>, <span style="color:#e6db74">&#34;v&#34;</span>, <span style="color:#a6e22e">unexport</span>, <span style="color:#a6e22e">ig</span>.<span style="color:#a6e22e">nameInInjector</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">ig</span>.<span style="color:#a6e22e">localNames</span> = append(<span style="color:#a6e22e">ig</span>.<span style="color:#a6e22e">localNames</span>, <span style="color:#a6e22e">lname</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">switch</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">kind</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">case</span> <span style="color:#a6e22e">structProvider</span>:
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">ig</span>.<span style="color:#a6e22e">structProviderCall</span>(<span style="color:#a6e22e">lname</span>, <span style="color:#a6e22e">c</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">case</span> <span style="color:#a6e22e">funcProviderCall</span>:
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">ig</span>.<span style="color:#a6e22e">funcProviderCall</span>(<span style="color:#a6e22e">lname</span>, <span style="color:#a6e22e">c</span>, <span style="color:#a6e22e">injectSig</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">case</span> <span style="color:#a6e22e">valueExpr</span>:
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">ig</span>.<span style="color:#a6e22e">valueExpr</span>(<span style="color:#a6e22e">lname</span>, <span style="color:#a6e22e">c</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">case</span> <span style="color:#a6e22e">selectorExpr</span>:
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">ig</span>.<span style="color:#a6e22e">fieldExpr</span>(<span style="color:#a6e22e">lname</span>, <span style="color:#a6e22e">c</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">default</span>:
+</span></span><span style="display:flex;"><span>			panic(<span style="color:#e6db74">&#34;unknown kind&#34;</span>)
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">calls</span>) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">ig</span>.<span style="color:#a6e22e">p</span>(<span style="color:#e6db74">&#34;\treturn %s&#34;</span>, <span style="color:#a6e22e">ig</span>.<span style="color:#a6e22e">paramNames</span>[<span style="color:#a6e22e">set</span>.<span style="color:#a6e22e">For</span>(<span style="color:#a6e22e">injectSig</span>.<span style="color:#a6e22e">out</span>).<span style="color:#a6e22e">Arg</span>().<span style="color:#a6e22e">Index</span>])
+</span></span><span style="display:flex;"><span>	} <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">ig</span>.<span style="color:#a6e22e">p</span>(<span style="color:#e6db74">&#34;\treturn %s&#34;</span>, <span style="color:#a6e22e">ig</span>.<span style="color:#a6e22e">localNames</span>[len(<span style="color:#a6e22e">calls</span>)<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>])
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">injectSig</span>.<span style="color:#a6e22e">cleanup</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">ig</span>.<span style="color:#a6e22e">p</span>(<span style="color:#e6db74">&#34;, func() {\n&#34;</span>)
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">i</span> <span style="color:#f92672">:=</span> len(<span style="color:#a6e22e">ig</span>.<span style="color:#a6e22e">cleanupNames</span>) <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>; <span style="color:#a6e22e">i</span> <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span>; <span style="color:#a6e22e">i</span><span style="color:#f92672">--</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">ig</span>.<span style="color:#a6e22e">p</span>(<span style="color:#e6db74">&#34;\t\t%s()\n&#34;</span>, <span style="color:#a6e22e">ig</span>.<span style="color:#a6e22e">cleanupNames</span>[<span style="color:#a6e22e">i</span>])
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">ig</span>.<span style="color:#a6e22e">p</span>(<span style="color:#e6db74">&#34;\t}&#34;</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">injectSig</span>.<span style="color:#a6e22e">err</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">ig</span>.<span style="color:#a6e22e">p</span>(<span style="color:#e6db74">&#34;, nil&#34;</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">ig</span>.<span style="color:#a6e22e">p</span>(<span style="color:#e6db74">&#34;\n}\n\n&#34;</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>首先处理 <code>injector</code>，写入函数名、参数，然后根据有无 <code>cleanup</code> 、<code>error</code> 写入返回值。“写入”这个动作是通过 <code>ig.p</code> 函数完成的；</p>
+<p>接下来处理传入参数 <code>calls</code>，首先获取变量的名称，然后根据不同的种类：结构体、函数、值和字段，分别写入生成的代码；最后处理生成代码的 <code>cleanup</code> 和 <code>error</code>；</p>
+<p>接下来需要回到 <code>Generate</code> 方法；前面提到过，Wire 代码生成最重要的是获取到 <code>injectorFiles</code> 以及 <code>g</code>；通过前面的学习，我们已经知道要生成的代码内容已经写入到了 <code>g</code> 中；接下来需要复制一些非 <code>injector</code> 的声明到 <code>g</code> 中，这是通过 <code>copyNonInjectorDecls</code> 方法完成的，来看看 <code>copyNonInjectorDecls</code> 的代码：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">copyNonInjectorDecls</span>(<span style="color:#a6e22e">g</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">gen</span>, <span style="color:#a6e22e">files</span> []<span style="color:#f92672">*</span><span style="color:#a6e22e">ast</span>.<span style="color:#a6e22e">File</span>, <span style="color:#a6e22e">info</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">types</span>.<span style="color:#a6e22e">Info</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">f</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">files</span> {
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">name</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">filepath</span>.<span style="color:#a6e22e">Base</span>(<span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">pkg</span>.<span style="color:#a6e22e">Fset</span>.<span style="color:#a6e22e">File</span>(<span style="color:#a6e22e">f</span>.<span style="color:#a6e22e">Pos</span>()).<span style="color:#a6e22e">Name</span>())
+</span></span><span style="display:flex;"><span>		<span style="color:#a6e22e">first</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">true</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">for</span> <span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">decl</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">range</span> <span style="color:#a6e22e">f</span>.<span style="color:#a6e22e">Decls</span> {
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">switch</span> <span style="color:#a6e22e">decl</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">decl</span>.(<span style="color:#66d9ef">type</span>) {
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">case</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">ast</span>.<span style="color:#a6e22e">FuncDecl</span>:
+</span></span><span style="display:flex;"><span>				<span style="color:#75715e">// OK to ignore error, as any error cases should already have
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>				<span style="color:#75715e">// been filtered out.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>				<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">buildCall</span>, <span style="color:#a6e22e">_</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">findInjectorBuild</span>(<span style="color:#a6e22e">info</span>, <span style="color:#a6e22e">decl</span>); <span style="color:#a6e22e">buildCall</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>					<span style="color:#66d9ef">continue</span>
+</span></span><span style="display:flex;"><span>				}
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">case</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">ast</span>.<span style="color:#a6e22e">GenDecl</span>:
+</span></span><span style="display:flex;"><span>				<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">decl</span>.<span style="color:#a6e22e">Tok</span> <span style="color:#f92672">==</span> <span style="color:#a6e22e">token</span>.<span style="color:#a6e22e">IMPORT</span> {
+</span></span><span style="display:flex;"><span>					<span style="color:#66d9ef">continue</span>
+</span></span><span style="display:flex;"><span>				}
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">default</span>:
+</span></span><span style="display:flex;"><span>				<span style="color:#66d9ef">continue</span>
+</span></span><span style="display:flex;"><span>			}
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">first</span> {
+</span></span><span style="display:flex;"><span>				<span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">p</span>(<span style="color:#e6db74">&#34;// %s:\n\n&#34;</span>, <span style="color:#a6e22e">name</span>)
+</span></span><span style="display:flex;"><span>				<span style="color:#a6e22e">first</span> = <span style="color:#66d9ef">false</span>
+</span></span><span style="display:flex;"><span>			}
+</span></span><span style="display:flex;"><span>			<span style="color:#75715e">// TODO(light): Add line number at top of each declaration.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>			<span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">writeAST</span>(<span style="color:#a6e22e">info</span>, <span style="color:#a6e22e">decl</span>)
+</span></span><span style="display:flex;"><span>			<span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">p</span>(<span style="color:#e6db74">&#34;\n\n&#34;</span>)
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span></code></pre></div><p>核心是 <code>g.writeAST</code> 方法：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">g</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">gen</span>) <span style="color:#a6e22e">writeAST</span>(<span style="color:#a6e22e">info</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">types</span>.<span style="color:#a6e22e">Info</span>, <span style="color:#a6e22e">node</span> <span style="color:#a6e22e">ast</span>.<span style="color:#a6e22e">Node</span>) {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">node</span> = <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">rewritePkgRefs</span>(<span style="color:#a6e22e">info</span>, <span style="color:#a6e22e">node</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">printer</span>.<span style="color:#a6e22e">Fprint</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">buf</span>, <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">pkg</span>.<span style="color:#a6e22e">Fset</span>, <span style="color:#a6e22e">node</span>); <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>		panic(<span style="color:#a6e22e">err</span>)
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>首先通过 <code>rewritePkgRefs</code> 重写相关引用的包名，然后通过 <code>Fprint</code> 方法将 <code>node</code> 写入 <code>g.buf</code> 中，从而完成“复制”；</p>
+<p><code>rewritePkgRefs</code> 函数比较长，功能实现依赖于 go 的 ast 包，本文所关注的是 Wire 代码生成的逻辑原理，所以这部分内容并不是本文所关注的重点，故不再展开。但这并不是说这部分内容不重要，相反这部分内容正是 ast 相关内容实践的绝佳例子。有机会详细聊聊 Wire 与 go/ast 包。</p>
+<p>到目前为止，该有的信息都已经处理完毕，该输出最后完整形态的生成代码啦：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// func Generate
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">copyNonInjectorDecls</span>(<span style="color:#a6e22e">g</span>, <span style="color:#a6e22e">injectorFiles</span>, <span style="color:#a6e22e">pkg</span>.<span style="color:#a6e22e">TypesInfo</span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">goSrc</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">g</span>.<span style="color:#a6e22e">frame</span>(<span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">Tags</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> len(<span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">Header</span>) &gt; <span style="color:#ae81ff">0</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">goSrc</span> = append(<span style="color:#a6e22e">opts</span>.<span style="color:#a6e22e">Header</span>, <span style="color:#a6e22e">goSrc</span><span style="color:#f92672">...</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">fmtSrc</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">format</span>.<span style="color:#a6e22e">Source</span>(<span style="color:#a6e22e">goSrc</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#75715e">// This is likely a bug from a poorly generated source file.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#75715e">// Add an error but also the unformatted source.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>	<span style="color:#a6e22e">generated</span>[<span style="color:#a6e22e">i</span>].<span style="color:#a6e22e">Errs</span> = append(<span style="color:#a6e22e">generated</span>[<span style="color:#a6e22e">i</span>].<span style="color:#a6e22e">Errs</span>, <span style="color:#a6e22e">err</span>)
+</span></span><span style="display:flex;"><span>} <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">goSrc</span> = <span style="color:#a6e22e">fmtSrc</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">generated</span>[<span style="color:#a6e22e">i</span>].<span style="color:#a6e22e">Content</span> = <span style="color:#a6e22e">goSrc</span>
+</span></span></code></pre></div><p>首先通过 <code>g.frame</code> 写入文件头、编译 tag、包名、import，然后写入 <code>g.buf</code> 中的内容；接下来通过 <code>format.Source</code> 格式化内容，最后将其记录在 <code>GenerateResult.Content</code> 字段中；</p>
+<p>至此，代码生成部分的内容就介绍完毕啦；</p>
+<h1 id="最佳实践">最佳实践</h1>
+<p><strong>使用有区别的类型</strong>
+如希望提供字符串类型的 MySQL 连接字符串，则定义一种新的类型，以此避免冲突：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MySQLConnectionString</span> <span style="color:#66d9ef">string</span>
+</span></span></code></pre></div><p><strong>使用 <code>Options</code> 结构体</strong>
+如果一个提供者有许多外部依赖，那么将这些依赖组合在 <code>Options</code> 结构体中：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Options</span> <span style="color:#66d9ef">struct</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Messages is the set of recommended greetings.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">Messages</span> []<span style="color:#a6e22e">Message</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Writer is the location to send greetings. nil goes to stdout.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">Writer</span> <span style="color:#a6e22e">io</span>.<span style="color:#a6e22e">Writer</span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewGreeter</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">opts</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Options</span>) (<span style="color:#f92672">*</span><span style="color:#a6e22e">Greeter</span>, <span style="color:#66d9ef">error</span>) {
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// ...
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">GreeterSet</span> = <span style="color:#a6e22e">wire</span>.<span style="color:#a6e22e">NewSet</span>(<span style="color:#a6e22e">wire</span>.<span style="color:#a6e22e">Struct</span>(new(<span style="color:#a6e22e">Options</span>), <span style="color:#e6db74">&#34;*&#34;</span>), <span style="color:#a6e22e">NewGreeter</span>)
+</span></span></code></pre></div><p><strong>关于库中的 <code>provider</code> 集合</strong>
+在类库中使用 <code>provider</code> 集合时，只有以下变更不会破坏兼容性：</p>
+<ul>
+<li>在没有引入新输入类型的情况下，替换 <code>provider</code> 集合中的某个 <code>provider</code>；新的 <code>provider</code>可以有更少的输入入参。需要注意的是，在没有重新生成代码之前，注册者函数使用的仍旧是旧的 <code>provider</code></li>
+<li>仅当某个类型从未出现在 <code>provider</code> 集合中时，可以引入新的输出类型；否则，有可能该类型已经在其他 <code>provider</code> 集合中包含了，此时就会产生冲突；
+其他的改动是不安全的，如：</li>
+<li><code>provider</code> 集合中引入新的输入；</li>
+<li>移除 <code>provider</code> 集合的输出类型；</li>
+<li>添加已经存在的输出类型到 <code>provider</code> 集合；
+对于破坏性的改动，考虑添加一个新的 <code>provider</code> 集合；如对于如下示例：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">GreeterSet</span> = <span style="color:#a6e22e">wire</span>.<span style="color:#a6e22e">NewSet</span>(<span style="color:#a6e22e">NewStdoutGreeter</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">DefaultGreeter</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>) <span style="color:#f92672">*</span><span style="color:#a6e22e">Greeter</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// ...
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewStdoutGreeter</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">msgs</span> []<span style="color:#a6e22e">Message</span>) <span style="color:#f92672">*</span><span style="color:#a6e22e">Greeter</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// ...
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">NewGreeter</span>(<span style="color:#a6e22e">ctx</span> <span style="color:#a6e22e">context</span>.<span style="color:#a6e22e">Context</span>, <span style="color:#a6e22e">w</span> <span style="color:#a6e22e">io</span>.<span style="color:#a6e22e">Writer</span>, <span style="color:#a6e22e">msgs</span> []<span style="color:#a6e22e">Message</span>) (<span style="color:#f92672">*</span><span style="color:#a6e22e">Greeter</span>, <span style="color:#66d9ef">error</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// ...
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p>对于 <code>GreeterSet</code> 而言，可以使用 <code>DefaultGreeter</code> 替换 <code>NewStdoutGreeter</code>，因为 <code>DefaultGreeter</code> 相比 <code>NewStdoutGreeter</code> 所需要的输入依赖更少；但是不能用 <code>NewGreeter</code> 替换 <code>NewStdoutGreeter</code>，因为 <code>NewGreeter</code> 引入了新的输入依赖 <code>io.Writer</code>，同时也不能额外新增一个 <code>io.Writer</code> 的 <code>provider</code>，因为有可能其他类库可能已经提供了 <code>io.Writer</code>；</p>
+<p>所以，在为类库代码选择 <code>provider</code> 集合的输出类型时需要更加小心；一般来说，<code>provider</code> 集合越小越好，这样和其他类库冲突的可能就越小；类库 <code>provider</code> 集合的输出类型一般仅包括类库自己所定义的类型，而类库需要的输入类型一般作为依赖项，类库自己不提供 <code>provider</code>，而是由使用方注入；</p>
+<p><strong>Mock 依赖</strong>
+一般来说，对依赖的 Mock 有两种方式：</p>
+<ol>
+<li>将 Mock 作为参数传入注册者函数，从而使得某个接口实现被 Mock 的效果；</li>
+<li>通过 <code>provider</code> 集合描述 Mock 绑定关系，并且通过新的返回值来访问应用和依赖项；
+上面两种方法不同点是注入 Mock 的方法，共同点时都需要额外的注册者函数来创建具有 Mock 功能的应用；
+Mock 的核心目的有两个：</li>
+<li>得到接口 A 的 Mock 实现和待测试应用；</li>
+<li>将  Mock 实现注入应用；
+1 是为了实现 Mock 逻辑和触发待测试的逻辑；2 是为了让 Mock 的逻辑在待测试应用中生效；
+方法 1 和 方法 2 的不同实际上就是这两个步骤的不同：</li>
+<li>方法 1，手动创建接口 A 的 Mock 实现，然后将其通过参数的形式传递给 Wire 以此来实现注入；</li>
+<li>方法 2，让 Wire 创建带有 Mock 实现和应用的新类型 B，从而获得了 Mock 实现和应用；</li>
+</ol>
+<h1 id="总结整理">总结整理</h1>
+<p>本文介绍了 Go 依赖注入工具 Wire 的安装、使用以及核心代码和原理等内容。不仅详细介绍了 Wire 的用法，还在源码级别介绍了 Wire 的工作流程和原理；</p>
+<p>出于聚焦 “Wire 工作流程和原理”这一目的的考虑，本文忽略了对 ast 包所提供的能力在 Wire 中的应用的介绍，这部分内容以后有机会再详细学习交流；</p>
+</article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<script type="application/javascript" src='https://qishan233.github.io/js/toc.js'></script>
+<link rel="stylesheet" href='https://qishan233.github.io/css/toc.css' />
+
+
+
+  <div class="footer container-xl width-full p-responsive">
+  <div
+    class="position-relative d-flex flex-row-reverse flex-lg-row flex-wrap flex-lg-nowrap flex-justify-center flex-lg-justify-between flex-sm-items-center pt-6 pb-2 mt-6 f6 text-gray border-top border-gray-light ">
+    <a aria-label="Homepage" title="GitHub" class="footer-octicon d-none d-lg-block mr-lg-4" href="https://qishan233.github.io/">
+      <svg height="24" class="octicon octicon-mark-github" viewBox="0 0 16 16" version="1.1" width="24">
+        <path fill-rule="evenodd"
+          d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+        </path>
+      </svg>
+    </a>
+    <ul class="list-style-none d-flex flex-wrap col-12 flex-justify-center flex-lg-justify-between mb-2 mb-lg-0">
+      
+      <li class="mr-3 mr-lg-0">qishan233</li>
+      
+    </ul>
+  </div>
+  <div class="d-flex flex-justify-center pb-6">
+    <span class="f6 text-gray-light"></span>
+  </div>
+
+
+</div>
+</body>
+
+<script type="application/javascript" src="https://qishan233.github.io/js/github-style.js"></script>
+
+
+
+
+</html>
